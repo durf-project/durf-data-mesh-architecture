@@ -1,0 +1,105 @@
+apiVersion: v3.1.0
+kind: DataContract
+id: durf-openaire-graph-edepot-feed-v1
+name: Preservation feed from the OpenAIRE Graph to the KB e-Depot
+version: 0.1.0
+status: draft
+domain: openaire
+dataProduct: openaire_graph
+tags:
+  - durf
+  - theme-4
+  - preservation
+description:
+  purpose: >-
+    An incremental feed of Dutch publications, with the location and fingerprint of every full-text file, that
+    the KB uses to pull metadata and files into the e-Depot (DURF theme 4). Pulling through the Graph means the
+    KB builds one harvester instead of seventy, and gets the records already deduplicated.
+  usage: >-
+    Producer: OpenAIRE. Consumer: the KB. The KB fetches the files themselves from the URLs in the feed, which
+    point back at the institutional repositories; so this contract only works if durf-cris-publications-v1
+    delivers file locations and checksums for every record with a file, whatever its access rights.
+  limitations: >-
+    Draft. The proposal describes the pull mechanism as "partly via OpenAIRE": for restricted and embargoed
+    files the KB may need direct, authenticated access to the repository, which would be a separate contract
+    between the KB and each institution.
+customProperties:
+  - property: durfTheme
+    value: 4
+  - property: diagramArrow
+    value: OpenAIRE Graph -> Preservation (KB e-Depot)
+  - property: producerParty
+    value: OpenAIRE
+  - property: consumers
+    value:
+      - KB (e-Depot ingest)
+  - property: dependsOn
+    value:
+      - durf-cris-publications-v1 (file_locations, checksum_md5, access_rights)
+team:
+  name: openaire-graph-team
+slaProperties:
+  - property: frequency
+    value: 1
+    unit: w
+    description: The feed can be harvested incrementally at least weekly (from = date of the KB's last pull).
+  - property: retention
+    value: persistent
+    description: Deletions and withdrawals are announced in the feed, never silently dropped, so the e-Depot can record them.
+servers:
+  - server: production
+    type: api
+    location: https://api.openaire.eu/graph/v1/researchProducts?relOrganizationCountryCode=NL
+    description: Placeholder; the exact endpoint and filter are to be agreed between OpenAIRE and the KB.
+schema:
+  - name: preservation_item
+    physicalType: json-object
+    logicalType: object
+    description: 'Grain: one full-text file of one Dutch publication, as known on the date of the feed.'
+    properties:
+      - name: openaire_id
+        logicalType: string
+        required: true
+      - name: source_datasource_id
+        logicalType: string
+        required: true
+        description: The Dutch repository the file comes from.
+      - name: source_original_id
+        logicalType: string
+        required: true
+        description: The record's "@id" in that repository, so the KB can report back per record (durf-edepot-preservation-status-v1).
+      - name: doi
+        logicalType: string
+        required: false
+      - name: file_url
+        logicalType: string
+        required: true
+      - name: mime_type
+        logicalType: string
+        required: true
+      - name: checksum_md5
+        logicalType: string
+        required: false
+        description: As delivered by the repository; the KB verifies the downloaded file against it.
+      - name: access_right
+        logicalType: string
+        required: true
+        description: COAR Access Rights label. The KB preserves all of them; access on the way out follows this value.
+      - name: embargo_end_date
+        logicalType: date
+        required: false
+      - name: license
+        logicalType: string
+        required: false
+      - name: status
+        logicalType: string
+        required: true
+        description: new, updated or deleted, relative to the previous feed.
+      - name: last_modified
+        logicalType: timestamp
+        required: true
+    quality:
+      - type: text
+        description: Every file_url resolves (HTTP 200) at the time of the feed, or the item is flagged so the KB does not retry forever.
+      - type: text
+        description: Every Dutch record with a file in the Graph has at least one preservation_item.

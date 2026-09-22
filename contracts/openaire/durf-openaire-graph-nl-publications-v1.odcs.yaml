@@ -1,0 +1,139 @@
+apiVersion: v3.1.0
+kind: DataContract
+id: durf-openaire-graph-nl-publications-v1
+name: OpenAIRE Graph, Dutch research output
+version: 0.1.0
+status: draft
+domain: openaire
+dataProduct: openaire_graph
+tags:
+  - durf
+  - theme-5
+  - theme-6
+description:
+  purpose: >-
+    The Dutch slice of the OpenAIRE Graph: every research product harvested from a Dutch repository or CRIS, or
+    affiliated to a Dutch organisation by ROR, deduplicated and enriched with what the Graph found in other
+    sources. It is the dataset behind the Netherlands Research Portal (theme 6) and the Dutch contribution the
+    Graph redistributes to other indexes and EOSC nodes (theme 5).
+  usage: >-
+    Producer: OpenAIRE. Consumers: the Netherlands Research Portal (OpenAIRE CONNECT), research-information
+    initiatives such as BROCCOLI, and indexes and EOSC nodes that take OpenAIRE data. The KB e-Depot has its
+    own, narrower output port: durf-openaire-graph-edepot-feed-v1.
+  limitations: >-
+    Draft. Field names follow the OpenAIRE Graph data model for research products; check them against the
+    current Graph API release. Membership of the Dutch slice (which organisations, which datasources) is
+    decided by DURF governance (theme 1) and recorded in the NaMeCo agreements.
+authoritativeDefinitions:
+  - type: implementation-guide
+    url: https://graph.openaire.eu/docs/data-model/
+    description: OpenAIRE Graph data model.
+  - type: implementation-guide
+    url: https://graph.openaire.eu/docs/apis/graph-api/
+    description: OpenAIRE Graph API.
+customProperties:
+  - property: durfTheme
+    value:
+      - 5
+      - 6
+  - property: diagramArrow
+    value:
+      - OpenAIRE Graph -> Netherlands Research Portal (OpenAIRE CONNECT)
+      - OpenAIRE Graph -> Other research indexes, catalogues & graphs
+  - property: producerParty
+    value: OpenAIRE
+  - property: inputPorts
+    value:
+      - durf-cris-publications-v1 (one per institution, via PROVIDE)
+      - Crossref, ORCID, ROR, DataCite and other Graph sources
+team:
+  name: openaire-graph-team
+slaProperties:
+  - property: frequency
+    value: 1
+    unit: m
+    description: The Graph, and so this slice, is refreshed with every Graph release, at least monthly.
+  - property: latency
+    value: 45
+    unit: d
+    description: A record harvested from a Dutch source appears in the slice within 45 days.
+servers:
+  - server: production
+    type: api
+    location: https://api.openaire.eu/graph/v1/researchProducts
+    description: Graph API, filtered on Dutch organisations and datasources.
+  - server: bulk
+    type: api
+    location: https://zenodo.org/communities/openaire-research-graph
+    description: Periodic full dumps of the Graph, published on Zenodo.
+schema:
+  - name: research_product
+    physicalType: json-object
+    logicalType: object
+    description: 'Grain: one deduplicated research product (the Graph''s representative record).'
+    properties:
+      - name: id
+        logicalType: string
+        required: true
+        unique: true
+        description: OpenAIRE ID of the deduplicated research product.
+      - name: type
+        logicalType: string
+        required: true
+        description: publication, dataset, software or other.
+      - name: main_title
+        logicalType: string
+        required: true
+      - name: publication_date
+        logicalType: date
+        required: false
+      - name: pids
+        logicalType: array
+        required: false
+        description: Persistent identifiers (scheme and value) such as DOI, Handle, PMID, URN:NBN.
+        items:
+          name: pid
+          logicalType: object
+      - name: authors
+        logicalType: array
+        required: true
+        items:
+          name: author
+          logicalType: object
+          properties:
+            - name: full_name
+              logicalType: string
+              required: true
+            - name: orcid
+              logicalType: string
+              required: false
+      - name: organisations
+        logicalType: array
+        required: true
+        description: Affiliated organisations, each with its ROR ID where known. At least one Dutch organisation.
+        items:
+          name: organisation
+          logicalType: object
+      - name: best_access_right
+        logicalType: string
+        required: true
+        description: The most open access right over all instances, as a COAR Access Rights label.
+      - name: instances
+        logicalType: array
+        required: true
+        description: Every copy the Graph knows of, with URL, access right, licence, hosting source and the source it was collected from.
+        items:
+          name: instance
+          logicalType: object
+      - name: original_ids
+        logicalType: array
+        required: true
+        description: The local IDs in each source, including the "@id" from each Dutch CRIS, so every consumer can trace a record back to its producer.
+        items:
+          name: original_id
+          logicalType: string
+    quality:
+      - type: text
+        description: Every record harvested from a Dutch datasource through durf-cris-publications-v1 is represented in the slice, deduplicated or not.
+      - type: text
+        description: original_ids always includes the source CRIS identifier for records that came from a Dutch CRIS.

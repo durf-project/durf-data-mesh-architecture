@@ -1,0 +1,275 @@
+apiVersion: v3.1.0
+kind: DataContract
+id: durf-cris-publications-v1
+name: Institutional publications, Dutch application profile of the OpenAIRE Guidelines for CRIS Managers 1.2
+version: 0.1.0
+status: draft
+domain: institutional-research-output
+dataProduct: cris_publications
+tags:
+  - durf
+  - theme-2
+  - openaire-cris-guidelines-1.2
+  - oai-pmh
+description:
+  purpose: >-
+    The publications of one Dutch research institution, exposed by its repository or CRIS over OAI-PMH as
+    CERIF-XML, so that OpenAIRE PROVIDE can harvest and validate them into the OpenAIRE Graph. This is the
+    first contract in the DURF information chain and the one every other contract downstream depends on:
+    the Graph, the Broker, the Netherlands Research Portal, the KB e-Depot and the international indexes
+    can only be as complete as what each institution delivers here.
+  usage: >-
+    One instance of this contract per institution. The institution's data team is the producer; OpenAIRE
+    PROVIDE is the consumer. The contract is the Dutch application profile: it follows the OpenAIRE
+    Guidelines for CRIS Managers 1.2 for structure and vocabularies, and tightens a number of "optional" or
+    "recommended" fields to "mandatory if applicable" where Dutch downstream consumers depend on them
+    (ROR, ORCID, COAR access rights, licence, full-text location, Taverne embargo date).
+  limitations: >-
+    Draft. The field list is taken from the OpenAIRE Guidelines for CRIS Managers 1.2 and should be checked
+    against the published XSD before use. The Dutch tightenings are a proposal for the NL Research
+    Information Content Board (to be formed through EduStandaard, DURF theme 2), which replaces the current
+    NL-DIDL/MODS requirements. Institutions that still expose NL-DIDL/MODS need a transition period.
+authoritativeDefinitions:
+  - type: implementation-guide
+    url: https://openaire-guidelines-for-cris-managers.readthedocs.io/en/v1.2.0/
+    description: OpenAIRE Guidelines for CRIS Managers 1.2 (CERIF-XML profile, OAI-PMH, vocabularies).
+  - type: businessDefinition
+    url: https://durf-project.github.io/position-paper/
+    description: DURF position paper, theme 2 (enriched metadata) and the rights-and-responsibilities matrix.
+customProperties:
+  - property: durfTheme
+    value: 2
+  - property: diagramArrow
+    value: Institutional Repositories -> Metadata harvester & validator (OpenAIRE PROVIDE)
+  - property: producerParty
+    value: Each university library (one contract instance per institution)
+  - property: consumers
+    value:
+      - durf-openaire-graph-nl-publications-v1 (via OpenAIRE PROVIDE)
+  - property: oaiPmhSet
+    value: openaire_cris_publications
+  - property: oaiPmhMetadataPrefix
+    value: oai_cerif_openaire
+  - property: replaces
+    value: NL-DIDL/MODS (EduStandaard)
+team:
+  name: institution-data-team
+  description: >-
+    The data team of the producing institution. Roles are fixed; the people are filled in per institution.
+  members:
+    - username: data-owner
+      role: Data owner
+      description: Library director or head of research support. Accountable for the contract being kept.
+    - username: data-steward
+      role: Data steward
+      description: Repository or CRIS manager. Responsible for metadata quality and for acting on validation and Broker signals.
+    - username: data-engineer
+      role: Data engineer
+      description: Functional or technical CRIS administrator. Keeps the OAI-PMH endpoint and CERIF mapping running.
+support:
+  - channel: durf-cris-publications
+    tool: email
+    url: mailto:repository@institution.example
+    description: Per institution; the address of the repository or CRIS team.
+slaProperties:
+  - property: frequency
+    value: 1
+    unit: d
+    description: New and changed records are exposed on the OAI-PMH endpoint at least daily.
+  - property: latency
+    value: 7
+    unit: d
+    description: A publication registered in the CRIS appears on the endpoint within seven days.
+  - property: availability
+    value: 99%
+    description: Monthly availability of the OAI-PMH endpoint.
+  - property: retention
+    value: persistent
+    description: >-
+      OAI-PMH deletedRecord support is "persistent". A withdrawn record is announced as deleted,
+      never silently dropped, so downstream consumers (Graph, e-Depot) can follow.
+servers:
+  - server: production
+    type: api
+    location: https://cris.institution.example/ws/oai?verb=ListRecords&metadataPrefix=oai_cerif_openaire&set=openaire_cris_publications
+    description: OAI-PMH 2.0 endpoint of the institution's repository or CRIS. Placeholder URL; one per institution.
+schema:
+  - name: publication
+    physicalName: cerif:Publication
+    physicalType: xml-element
+    logicalType: object
+    description: >-
+      Grain: one CERIF Publication per OAI-PMH record. Obligations: M = mandatory, MA = mandatory if applicable,
+      R = recommended. "NL" marks where the Dutch profile is stricter than the OpenAIRE guidelines.
+    properties:
+      - name: id
+        physicalName: '@id'
+        logicalType: string
+        required: true
+        unique: true
+        description: Stable local identifier of the publication in the CRIS. Never reused. (M)
+      - name: type
+        physicalName: pubt:Type
+        logicalType: string
+        required: true
+        description: Publication type from the COAR Resource Types vocabulary, as a URI. (M)
+        examples:
+          - http://purl.org/coar/resource_type/c_6501
+        authoritativeDefinitions:
+          - type: vocabulary
+            url: https://vocabularies.coar-repositories.org/resource_types/
+      - name: title
+        physicalName: Title
+        logicalType: string
+        required: true
+        description: Main title, with xml:lang. (M)
+      - name: publication_date
+        physicalName: PublicationDate
+        logicalType: string
+        required: true
+        description: Date of first publication, ISO 8601 (YYYY, YYYY-MM or YYYY-MM-DD). (M)
+        examples:
+          - '2026-03-14'
+      - name: language
+        physicalName: Language
+        logicalType: string
+        required: false
+        description: ISO 639-1 language code of the publication. (R)
+      - name: doi
+        physicalName: DOI
+        logicalType: string
+        required: false
+        description: >-
+          DOI without resolver prefix, lower case. Mandatory whenever the publication has one (MA). The OpenAIRE
+          guidelines leave identifiers optional; NL requires the DOI when it exists, because it is the main
+          deduplication key in the Graph and for the indexes.
+        examples:
+          - 10.1234/example.5678
+      - name: other_identifiers
+        logicalType: object
+        required: false
+        description: Handle, URN (URN:NBN once assigned by the KB), PMCID, ISBN, ISSN, ISI-Number, SCP-Number. (MA)
+      - name: authors
+        physicalName: Authors/Author
+        logicalType: array
+        required: true
+        description: Ordered list of authors, in author order. (M)
+        items:
+          name: author
+          logicalType: object
+          properties:
+            - name: display_name
+              physicalName: DisplayName
+              logicalType: string
+              required: true
+            - name: orcid
+              physicalName: Person/ORCID
+              logicalType: string
+              required: false
+              description: ORCID iD of the author when known to the CRIS. MA in NL (R in OpenAIRE).
+            - name: affiliation_ror
+              physicalName: Affiliation/OrgUnit/RORID
+              logicalType: string
+              required: false
+              description: >-
+                ROR ID of the affiliation. MA in NL: at least the author's own institution carries its ROR,
+                so the Graph and the Portal can attribute the publication to the right Dutch organisation.
+      - name: published_in
+        physicalName: PublishedIn
+        logicalType: object
+        required: false
+        description: The journal, book or series, with its ISSN or ISBN, volume, issue and pages. (MA)
+      - name: publisher
+        physicalName: Publishers/Publisher
+        logicalType: string
+        required: false
+        description: Publisher name, preferably with its ROR. (R)
+      - name: abstract
+        physicalName: Abstract
+        logicalType: string
+        required: false
+        description: Abstract, with xml:lang. (R)
+      - name: keywords
+        physicalName: Keyword
+        logicalType: array
+        required: false
+        items:
+          name: keyword
+          logicalType: string
+      - name: access_rights
+        physicalName: ar:Access
+        logicalType: string
+        required: true
+        description: >-
+          COAR Access Rights URI: open access, embargoed access, restricted access or metadata only access.
+          M in NL (MA in OpenAIRE): the e-Depot, the Portal and the indexes all branch on it.
+        authoritativeDefinitions:
+          - type: vocabulary
+            url: https://vocabularies.coar-repositories.org/access_rights/
+      - name: embargo_end_date
+        logicalType: date
+        required: false
+        description: >-
+          End of the embargo for embargoed access, ISO 8601. NL addition, MA. Needed to open up Taverne
+          (Article 25fa) versions on time.
+      - name: license
+        physicalName: License
+        logicalType: string
+        required: false
+        description: Licence of the full text as a URI, e.g. a Creative Commons licence. MA in NL.
+        examples:
+          - https://creativecommons.org/licenses/by/4.0/
+      - name: file_locations
+        physicalName: FileLocations/Medium
+        logicalType: array
+        required: false
+        description: >-
+          Location(s) of the full text. MA in NL for every record that has a file, whatever its access
+          rights: the e-Depot preserves restricted and embargoed files too. Each medium has a type, URL,
+          MIME type, size and checksum, so downstream consumers can fetch and verify the file.
+        items:
+          name: medium
+          logicalType: object
+          properties:
+            - name: url
+              logicalType: string
+              required: true
+            - name: mime_type
+              logicalType: string
+              required: true
+              examples:
+                - application/pdf
+            - name: size_bytes
+              logicalType: integer
+              required: false
+            - name: checksum_md5
+              logicalType: string
+              required: false
+              description: NL addition, R. Lets the e-Depot verify that what it pulled is what the repository holds.
+            - name: version_type
+              logicalType: string
+              required: false
+              description: COAR Version Types URI (e.g. accepted manuscript), needed to tell a Taverne version apart.
+      - name: funding
+        physicalName: OriginatesFrom
+        logicalType: array
+        required: false
+        description: Projects and fundings this publication results from, with funder ROR / Crossref Funder ID and grant ID. (MA)
+        items:
+          name: funding_reference
+          logicalType: object
+    quality:
+      - type: custom
+        engine: openaire-provide-validator
+        description: >-
+          The OpenAIRE PROVIDE validator for the CRIS Guidelines 1.2 profile passes with no errors. This is the
+          contract test: it runs on every harvest, and its result is visible to both the producer and DURF.
+        implementation: https://provide.openaire.eu/compatibility/validate
+      - type: text
+        description: Every record with a DOI in the CRIS exposes it in the DOI element; no DOI is only exposed in a URL.
+      - type: text
+        description: Every author affiliated with the producing institution carries the institution's ROR ID.
+      - type: text
+        description: Every record with an attached file has at least one FileLocations/Medium with URL and MIME type.
+      - type: text
+        description: access_rights is always present and always a COAR Access Rights URI; embargoed access always comes with embargo_end_date.

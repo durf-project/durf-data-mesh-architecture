@@ -1,0 +1,109 @@
+apiVersion: v3.1.0
+kind: DataContract
+id: durf-edepot-preservation-status-v1
+name: KB e-Depot preservation status and URN:NBN per Dutch publication
+version: 0.1.0
+status: draft
+domain: kb
+dataProduct: edepot_preservation
+tags:
+  - durf
+  - theme-4
+  - preservation
+  - urn-nbn
+description:
+  purpose: >-
+    The KB's side of the preservation bargain. For every file it pulled through
+    durf-openaire-graph-edepot-feed-v1, the KB reports back whether it is safely preserved, when, under which
+    URN:NBN, and whether the last fixity check passed. Institutions store the URN:NBN in their CRIS, the
+    URN:NBN resolver points it at the current location, and DURF's preservation monitor reads the same output
+    port.
+  usage: >-
+    Producer: the KB. Consumers: each institution's data team (to write the URN:NBN back into its CRIS, where it
+    reappears in durf-cris-publications-v1 as an identifier), the KB URN:NBN resolver, and the DURF preservation
+    monitor.
+  limitations: >-
+    Draft. Which formats the e-Depot accepts, and what counts as "preserved", are KB policy; this contract only
+    fixes what gets reported back.
+authoritativeDefinitions:
+  - type: implementation-guide
+    url: https://www.kb.nl/en/organisation/research-expertise/long-term-usability-of-digital-resources
+    description: KB e-Depot and long-term preservation.
+  - type: implementation-guide
+    url: https://persid.nl/
+    description: URN:NBN resolver of the KB.
+customProperties:
+  - property: durfTheme
+    value: 4
+  - property: diagramArrow
+    value:
+      - Preservation (KB e-Depot) -> Institutional Repositories (status and URN:NBN back)
+      - Preservation (KB e-Depot) -> KB URN resolver
+  - property: producerParty
+    value: KB (National Library of the Netherlands)
+  - property: inputPorts
+    value:
+      - durf-openaire-graph-edepot-feed-v1
+team:
+  name: kb-edepot-team
+slaProperties:
+  - property: latency
+    value: 30
+    unit: d
+    description: A file offered in the feed has a final status (preserved or failed, with reason) within 30 days.
+  - property: frequency
+    value: 1
+    unit: w
+servers:
+  - server: production
+    type: api
+    location: https://edepot.kb.example/durf/v1/status
+    description: Placeholder; the endpoint is to be agreed between the KB and DURF.
+schema:
+  - name: preservation_status
+    physicalType: json-object
+    logicalType: object
+    description: 'Grain: one row per file per source record.'
+    properties:
+      - name: source_datasource_id
+        logicalType: string
+        required: true
+      - name: source_original_id
+        logicalType: string
+        required: true
+        description: The record's "@id" in the source CRIS, echoed from the feed.
+      - name: file_url
+        logicalType: string
+        required: true
+      - name: status
+        logicalType: string
+        required: true
+        description: One of pending, preserved, failed, withdrawn.
+      - name: failure_reason
+        logicalType: string
+        required: false
+        description: Mandatory when status is failed, e.g. file unreachable, checksum mismatch, format not accepted.
+      - name: urn_nbn
+        logicalType: string
+        required: false
+        description: URN:NBN assigned by the KB. Mandatory when status is preserved.
+        examples:
+          - urn:nbn:nl:ui:00-0000000000
+      - name: preserved_on
+        logicalType: date
+        required: false
+      - name: format_id
+        logicalType: string
+        required: false
+        description: PRONOM format identifier established at ingest.
+      - name: last_fixity_check
+        logicalType: date
+        required: false
+      - name: fixity_ok
+        logicalType: boolean
+        required: false
+    quality:
+      - type: text
+        description: Every item in the feed eventually gets a row here; nothing stays pending longer than the latency SLA.
+      - type: text
+        description: Every preserved row has a urn_nbn that resolves through the URN:NBN resolver.

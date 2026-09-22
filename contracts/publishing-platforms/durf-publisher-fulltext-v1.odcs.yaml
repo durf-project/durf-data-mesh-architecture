@@ -1,0 +1,123 @@
+apiVersion: v3.1.0
+kind: DataContract
+id: durf-publisher-fulltext-v1
+name: Publisher deliveries of full text and CC0 metadata to Dutch repositories
+version: 0.1.0
+status: draft
+domain: publishing-platforms
+dataProduct: publisher_deliveries
+tags:
+  - durf
+  - theme-3
+  - full-text
+  - taverne
+description:
+  purpose: >-
+    Publishers and preprint servers deliver the full text and CC0 metadata of articles by authors from Dutch
+    institutions straight to those institutions' repositories, so repositories no longer have to chase PDFs
+    one by one. This is the input that closes the "lots of article PDFs are missing" gap (DURF theme 3).
+  usage: >-
+    Producer: a publishing platform, usually under the terms of a Dutch read-and-publish agreement. Consumer:
+    the repository of every institution whose affiliated author appears in the article. Routing on the
+    institution's ROR ID can go through a router service rather than point to point.
+  limitations: >-
+    Draft. Publishing platforms sit outside DURF's own governance, so this contract only has force where it
+    is written into an agreement with the publisher (for example in the open access terms of a national
+    deal). Without such an agreement it describes what DURF repositories are able to receive, not what
+    publishers must send.
+authoritativeDefinitions:
+  - type: implementation-guide
+    url: https://jats.nlm.nih.gov/
+    description: JATS, the article metadata format most publishers already produce.
+  - type: implementation-guide
+    url: https://swordapp.github.io/swordv3/swordv3.html
+    description: SWORD v3, the deposit protocol repositories can already receive over.
+customProperties:
+  - property: durfTheme
+    value: 3
+  - property: diagramArrow
+    value: Publishing platforms -> Institutional Repositories
+  - property: producerParty
+    value: Publishing platforms (outside DURF's own governance)
+  - property: consumers
+    value:
+      - durf-cris-publications-v1 (the repository re-exposes what it receives)
+team:
+  name: publisher-delivery-team
+  description: The publisher's own production or open access team. Named per agreement.
+slaProperties:
+  - property: latency
+    value: 7
+    unit: d
+    description: Delivered within seven days of online publication of the version of record.
+  - property: frequency
+    value: 1
+    unit: d
+    description: Deliveries are batched at least daily.
+servers:
+  - server: production
+    type: api
+    location: https://repository.institution.example/sword/v3/service-document
+    description: SWORD v3 deposit endpoint of the receiving repository, or of a router acting on its behalf. Placeholder.
+schema:
+  - name: delivery
+    physicalType: package
+    logicalType: object
+    description: 'Grain: one package per article per receiving institution. A package holds JATS XML plus the full-text files.'
+    properties:
+      - name: doi
+        logicalType: string
+        required: true
+        description: DOI of the article, without resolver prefix.
+      - name: jats_metadata
+        physicalName: article.xml
+        logicalType: string
+        required: true
+        description: >-
+          JATS XML with at least title, authors (with ORCID where known), affiliations (with ROR ID), journal
+          ISSN, publication date, funding and licence. The metadata is licensed CC0.
+      - name: metadata_license
+        logicalType: string
+        required: true
+        description: Always the CC0 1.0 URI. Metadata the repository cannot redistribute is of no use downstream.
+        examples:
+          - https://creativecommons.org/publicdomain/zero/1.0/
+      - name: recipient_ror
+        logicalType: string
+        required: true
+        description: ROR ID of the institution this package is routed to.
+      - name: files
+        logicalType: array
+        required: true
+        items:
+          name: file
+          logicalType: object
+          properties:
+            - name: filename
+              logicalType: string
+              required: true
+            - name: mime_type
+              logicalType: string
+              required: true
+            - name: version_type
+              logicalType: string
+              required: true
+              description: COAR Version Types URI, e.g. version of record or accepted manuscript.
+            - name: license
+              logicalType: string
+              required: true
+              description: Licence of this file as a URI.
+            - name: embargo_end_date
+              logicalType: date
+              required: false
+              description: Earliest date the file may be made publicly available, if not immediately.
+            - name: checksum_md5
+              logicalType: string
+              required: true
+    quality:
+      - type: text
+        description: Every package carries at least one file with a licence and a COAR version type.
+      - type: text
+        description: Every affiliation of the receiving institution in the JATS carries its ROR ID.
+      - type: text
+        description: The checksum of every file matches the file delivered.

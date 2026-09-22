@@ -1,0 +1,108 @@
+apiVersion: v3.1.0
+kind: DataContract
+id: durf-broker-enrichment-events-v1
+name: OpenAIRE Broker enrichment events for Dutch repositories
+version: 0.1.0
+status: draft
+domain: openaire
+dataProduct: openaire_graph
+tags:
+  - durf
+  - theme-2
+  - feedback-loop
+description:
+  purpose: >-
+    The feedback half of the loop. After the Graph has aggregated, deduplicated and cross-referenced a record
+    from a Dutch repository against every other source, the Broker tells that repository what it could add or
+    correct: a missing DOI, an ORCID, a project, an open access version found elsewhere, a subject. This is how
+    the Graph's work flows back to the source instead of disappearing into a one-way pipeline (DURF theme 2).
+  usage: >-
+    Producer: OpenAIRE. Consumer: the data team of each institution, which reviews the events and applies the
+    ones it accepts in its CRIS, so they reach the Graph again on the next harvest through
+    durf-cris-publications-v1.
+  limitations: >-
+    Draft. The topic list follows the OpenAIRE Broker's published topics; check the current list before
+    relying on a topic. Whether events arrive by subscription, by API pull or as COAR Notify messages is up to
+    each institution and its CRIS.
+authoritativeDefinitions:
+  - type: implementation-guide
+    url: https://provide.openaire.eu/
+    description: OpenAIRE PROVIDE, which hosts the Broker subscriptions for content providers.
+  - type: implementation-guide
+    url: https://coar-notify.net/
+    description: COAR Notify, for delivering events straight into a repository.
+customProperties:
+  - property: durfTheme
+    value: 2
+  - property: diagramArrow
+    value: Enriched Metadata (OpenAIRE Broker) -> Institutional Repositories
+  - property: producerParty
+    value: OpenAIRE
+  - property: consumers
+    value:
+      - Each institution's data team
+team:
+  name: openaire-broker-team
+slaProperties:
+  - property: frequency
+    value: 1
+    unit: w
+    description: New events are published at least with every Graph release.
+  - property: retention
+    value: 180
+    unit: d
+    description: An unacknowledged event stays available for at least 180 days.
+servers:
+  - server: production
+    type: api
+    location: https://api.openaire.eu/broker/
+    description: OpenAIRE Broker API, scoped to the institution's datasource ID.
+schema:
+  - name: enrichment_event
+    physicalType: json-object
+    logicalType: object
+    description: 'Grain: one event per suggested change per target record.'
+    properties:
+      - name: event_id
+        logicalType: string
+        required: true
+        unique: true
+      - name: topic
+        logicalType: string
+        required: true
+        description: What kind of suggestion this is.
+        examples:
+          - ENRICH/MISSING/PID
+          - ENRICH/MORE/PID
+          - ENRICH/MISSING/ABSTRACT
+          - ENRICH/MISSING/PROJECT
+          - ENRICH/MISSING/OPENACCESS_VERSION
+          - ENRICH/MISSING/SUBJECT/MESHEUROPMC
+      - name: target_original_id
+        logicalType: string
+        required: true
+        description: The record's own identifier in the source CRIS (the "@id" of durf-cris-publications-v1), so the institution can find it.
+      - name: target_datasource_id
+        logicalType: string
+        required: true
+        description: OpenAIRE datasource ID of the receiving repository.
+      - name: trust
+        logicalType: number
+        required: true
+        description: Confidence of the suggestion, between 0 and 1.
+      - name: suggestion
+        logicalType: object
+        required: true
+        description: The value to add, e.g. a PID with its scheme, a project with funder and grant ID, or a URL of an open access version.
+      - name: provenance
+        logicalType: string
+        required: true
+        description: The source in the Graph the suggestion came from, e.g. Crossref, another repository or Europe PMC.
+      - name: created
+        logicalType: timestamp
+        required: true
+    quality:
+      - type: text
+        description: Every event resolves to a record that currently exists in the receiving repository's last harvest.
+      - type: text
+        description: The same suggestion for the same record is never published twice once acknowledged or rejected.
