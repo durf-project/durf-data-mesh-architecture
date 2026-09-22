@@ -1,0 +1,94 @@
+apiVersion: v3.1.0
+kind: DataContract
+id: durf-repository-discovery-v1
+name: Repository landing pages and sitemaps for search engines and indexes
+version: 0.1.0
+status: draft
+domain: institutional-research-output
+dataProduct: cris_publications
+tags:
+  - durf
+  - theme-5
+  - discoverability
+description:
+  purpose: >-
+    The second output port of the same institutional data product: every publication has a crawlable landing
+    page with machine-readable metadata, listed in a sitemap, so that Google Scholar, OpenAlex, CORE, BASE and
+    other indexes pick up Dutch research output directly from the source (DURF theme 5).
+  usage: >-
+    Producer: the institution's data team. Consumers: web crawlers of search engines and indexes. Unlike the
+    other DURF contracts, the consumers here are outside DURF's governance and never sign anything; the
+    contract is a promise the institution makes, which the DURF visibility monitor checks.
+  limitations: >-
+    Draft. Which meta-tag conventions each index honours changes over time; the DURF theme 5 mappings and best
+    practices are where this contract gets its detail.
+authoritativeDefinitions:
+  - type: implementation-guide
+    url: https://scholar.google.com/intl/en/scholar/inclusion.html
+    description: Google Scholar inclusion guidelines (citation_* meta tags, PDF links).
+  - type: implementation-guide
+    url: https://schema.org/ScholarlyArticle
+    description: schema.org ScholarlyArticle, for JSON-LD on the landing page.
+  - type: implementation-guide
+    url: https://www.sitemaps.org/protocol.html
+    description: Sitemaps protocol.
+customProperties:
+  - property: durfTheme
+    value: 5
+  - property: diagramArrow
+    value: Institutional Repositories -> Other research indexes, catalogues & graphs
+  - property: producerParty
+    value: Each university library
+team:
+  name: institution-data-team
+slaProperties:
+  - property: latency
+    value: 7
+    unit: d
+    description: A new public record is in the sitemap within seven days.
+servers:
+  - server: production
+    type: api
+    location: https://repository.institution.example/sitemap.xml
+    description: Sitemap index of the repository. Placeholder.
+schema:
+  - name: landing_page
+    physicalType: html-page
+    logicalType: object
+    description: 'Grain: one landing page per publication with at least public metadata.'
+    properties:
+      - name: url
+        logicalType: string
+        required: true
+        description: Stable URL of the landing page, listed in the sitemap with lastmod.
+      - name: citation_title
+        logicalType: string
+        required: true
+        description: <meta name="citation_title">.
+      - name: citation_author
+        logicalType: array
+        required: true
+        description: One <meta name="citation_author"> per author, in author order.
+        items:
+          name: author
+          logicalType: string
+      - name: citation_publication_date
+        logicalType: string
+        required: true
+      - name: citation_doi
+        logicalType: string
+        required: false
+        description: Mandatory whenever the publication has a DOI.
+      - name: citation_pdf_url
+        logicalType: string
+        required: false
+        description: Direct link to the open access PDF, mandatory whenever one is public.
+      - name: json_ld
+        logicalType: object
+        required: false
+        description: schema.org ScholarlyArticle JSON-LD, with identifier, author ORCIDs and affiliation ROR IDs. Recommended.
+    quality:
+      - type: text
+        description: robots.txt allows crawling of landing pages and public full-text files.
+      - type: text
+        description: Every citation_pdf_url returns the PDF itself (HTTP 200, application/pdf), not a login page or an HTML viewer.

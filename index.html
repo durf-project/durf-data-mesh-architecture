@@ -1,0 +1,763 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<script>
+// Applied before the stylesheet is parsed, so the chosen theme paints first
+// try. Same storage key as the DURF position paper, so the choice carries over.
+(function () {
+  try {
+    var stored = localStorage.getItem('durf-theme');
+    if (stored === 'light' || stored === 'dark') {
+      document.documentElement.setAttribute('data-theme', stored);
+    }
+  } catch (e) {}
+})();
+</script>
+<title>DURF Data Contracts</title>
+<meta name="description" content="How every party in the Dutch Repository Federation can deliver its data as a product, according to a data contract, so Dutch research output becomes resilient, open and global. No central lake needed.">
+<link rel="canonical" href="https://durf-project.github.io/durf-data-mesh-architecture/">
+<link rel="icon" type="image/png" href="assets/durf-favicon.png">
+<meta property="og:title" content="No lake required: data products and data contracts for the Dutch Repository Federation">
+<meta property="og:description" content="How every party in the DURF information chain can deliver its data as a product, according to a contract.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://durf-project.github.io/durf-data-mesh-architecture/">
+<meta property="og:image" content="https://durf-project.github.io/durf-data-mesh-architecture/assets/durf-logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   DURF data mesh architecture
+   Same SURF Design System tokens as the DURF position paper and roadmap.
+   Only token VALUES change between themes; every rule reads the tokens.
+   ========================================================================== */
+:root {
+  --sds--color--black: #050E1D;
+  --sds--color--white: #FFFFFF;
+  --sds--color--gray--100: #F4F6F8;
+  --sds--color--gray--200: #EAECF0;
+  --sds--color--gray--250: #CDD0D5;
+  --sds--color--gray--300: #B2B6BE;
+  --sds--color--gray--400: #8C969F;
+  --sds--color--gray--500: #5E6873;
+  --sds--color--yellow--200: #FEF8D3;
+  --sds--color--blue--100: #DFF4FF;
+  --sds--color--blue--500: #004C97;
+
+  --durf--blue: #177ABF;
+  --durf--purple: #5C1B61;
+  --durf--green: #17A95D;
+  --durf--yellow: #F6DA44;
+  --durf--amber-text: #6b5900;
+  --durf--purple-tint: #F3E7F4;
+
+  /* figure */
+  --fig-frame: #5E6873;
+  --fig-frame-bg: #FFFFFF;
+  --fig-data-bg: #DCF2E5; --fig-data-line: #17A95D; --fig-data-ink: #0B4A2A;
+  --fig-ctr-bg: #F3E7F4;  --fig-ctr-line: #8E3A96; --fig-ctr-ink: #45124A;
+  --fig-tool-bg: #F4F6F8; --fig-tool-line: #8C969F; --fig-tool-ink: #2C3640;
+  --fig-out-bg: #FAFAFA;
+
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --sds--color--black: #EDF1F6;
+    --sds--color--white: #0A1420;
+    --sds--color--gray--100: #101C2C;
+    --sds--color--gray--200: #1D2C42;
+    --sds--color--gray--250: #26374F;
+    --sds--color--gray--300: #52657E;
+    --sds--color--gray--400: #7891AC;
+    --sds--color--gray--500: #9FB0C4;
+    --sds--color--yellow--200: #2E2A10;
+    --sds--color--blue--100: #10263D;
+    --sds--color--blue--500: #6FC2FF;
+    --durf--amber-text: #E8D67A;
+    --durf--purple-tint: #241A2E;
+    --fig-frame: #7891AC;
+    --fig-frame-bg: #0E1928;
+    --fig-data-bg: #0F3324; --fig-data-line: #3FCB85; --fig-data-ink: #CFF5E0;
+    --fig-ctr-bg: #2B1A33;  --fig-ctr-line: #C98FD1; --fig-ctr-ink: #F3DDF6;
+    --fig-tool-bg: #16233A; --fig-tool-line: #52657E; --fig-tool-ink: #D8DEE5;
+    --fig-out-bg: #0C1624;
+  }
+}
+:root[data-theme="dark"] {
+  --sds--color--black: #EDF1F6;
+  --sds--color--white: #0A1420;
+  --sds--color--gray--100: #101C2C;
+  --sds--color--gray--200: #1D2C42;
+  --sds--color--gray--250: #26374F;
+  --sds--color--gray--300: #52657E;
+  --sds--color--gray--400: #7891AC;
+  --sds--color--gray--500: #9FB0C4;
+  --sds--color--yellow--200: #2E2A10;
+  --sds--color--blue--100: #10263D;
+  --sds--color--blue--500: #6FC2FF;
+  --durf--amber-text: #E8D67A;
+  --durf--purple-tint: #241A2E;
+  --fig-frame: #7891AC;
+  --fig-frame-bg: #0E1928;
+  --fig-data-bg: #0F3324; --fig-data-line: #3FCB85; --fig-data-ink: #CFF5E0;
+  --fig-ctr-bg: #2B1A33;  --fig-ctr-line: #C98FD1; --fig-ctr-ink: #F3DDF6;
+  --fig-tool-bg: #16233A; --fig-tool-line: #52657E; --fig-tool-ink: #D8DEE5;
+  --fig-out-bg: #0C1624;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: "Source Sans 3", "Source Sans Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--sds--color--black);
+  background-color: var(--sds--color--white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color .15s ease, color .15s ease;
+}
+a { color: var(--durf--blue); }
+a:hover { color: var(--sds--color--blue--500); }
+
+.durf-shell { max-width: 46rem; margin: 0 auto; padding: 0 1.5rem; }
+
+/* ---- header ------------------------------------------------------------ */
+.durf-header { border-bottom: .0625rem solid var(--sds--color--gray--200); padding: 3rem 0 2.5rem; }
+.durf-header__inner { display: flex; flex-wrap: wrap; align-items: center; gap: 2rem; }
+.durf-header__logo { width: 7rem; height: 7rem; flex: 0 0 auto; }
+.durf-header__text { flex: 1 1 20rem; min-width: 0; }
+.durf-eyebrow {
+  margin: 0 0 .5rem;
+  font-weight: 700;
+  font-size: .8125rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--durf--blue);
+}
+.durf-title {
+  margin: 0;
+  font-family: Nunito, "Source Sans 3", sans-serif;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  font-size: 2.25rem;
+  line-height: 1.12;
+}
+.durf-lede { margin: 1rem 0 0; font-size: 1.1875rem; color: var(--sds--color--gray--500); }
+.durf-byline { margin: .875rem 0 0; color: var(--sds--color--gray--500); font-weight: 600; font-size: .9375rem; }
+.durf-draft-tag {
+  display: inline-block;
+  margin-left: .5rem;
+  padding: .125rem .5rem;
+  border-radius: 1rem;
+  background: var(--sds--color--yellow--200);
+  color: var(--durf--amber-text);
+  font-size: .75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  vertical-align: middle;
+}
+.durf-header__links { margin-top: 1.25rem; display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; font-size: .875rem; font-weight: 600; }
+.durf-header__links a { text-decoration: none; }
+.durf-header__links a:hover { text-decoration: underline; }
+
+/* ---- content ------------------------------------------------------------ */
+.durf-content { padding: 2.5rem 0 1rem; }
+.durf-content h2, .durf-content h3 {
+  font-family: Nunito, "Source Sans 3", sans-serif;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  color: var(--sds--color--black);
+}
+.durf-content h2 {
+  font-size: 1.5rem;
+  line-height: 1.25;
+  margin: 3rem 0 .875rem;
+  padding-top: 1.25rem;
+  border-top: .1875rem solid var(--durf--blue);
+}
+.durf-content h3 { font-size: 1.125rem; margin: 1.75rem 0 .5rem; }
+.durf-content p { margin: 0 0 1.1rem; }
+.durf-content ul, .durf-content ol { margin: 0 0 1.1rem; padding-left: 1.5rem; }
+.durf-content li { margin-bottom: .4rem; }
+.durf-content strong { font-weight: 700; }
+.durf-content a { font-weight: 600; text-underline-offset: .15em; }
+.durf-content code {
+  font-family: var(--mono);
+  font-size: .82em;
+  background: var(--sds--color--gray--100);
+  border: .0625rem solid var(--sds--color--gray--200);
+  padding: .05em .3em;
+  border-radius: .25rem;
+}
+.durf-content pre {
+  background: var(--sds--color--gray--100);
+  border: .0625rem solid var(--sds--color--gray--200);
+  border-radius: .5rem;
+  padding: 1rem 1.125rem;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: .8rem;
+  line-height: 1.55;
+  margin: 0 0 1.5rem;
+}
+.durf-content pre code { background: none; border: 0; padding: 0; font-size: inherit; }
+.durf-content pre .c { color: var(--sds--color--gray--500); }
+
+.durf-table-wrap { overflow-x: auto; margin: 1.25rem 0 1.75rem; }
+.durf-content table { width: 100%; border-collapse: collapse; font-size: .9375rem; line-height: 1.45; }
+.durf-content th, .durf-content td {
+  padding: .625rem .75rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: .0625rem solid var(--sds--color--gray--200);
+}
+.durf-content th { font-weight: 700; border-bottom: .125rem solid var(--durf--blue); }
+.durf-content tbody tr:nth-child(even) { background: var(--sds--color--gray--100); }
+.durf-content td code { font-size: .78rem; }
+.durf-content td.nl { font-weight: 700; color: var(--durf--blue); }
+
+.durf-callout {
+  margin: 1.5rem 0;
+  padding: 1.125rem 1.375rem;
+  background: var(--sds--color--blue--100);
+  border-left: .25rem solid var(--durf--blue);
+  border-radius: 0 .5rem .5rem 0;
+}
+.durf-callout p:last-child, .durf-callout ul:last-child { margin-bottom: 0; }
+.durf-callout__label {
+  display: block;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--durf--blue);
+  margin-bottom: .4rem;
+}
+.durf-note {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  border-left: .25rem solid var(--durf--yellow);
+  background: var(--sds--color--yellow--200);
+  border-radius: 0 .375rem .375rem 0;
+  color: var(--durf--amber-text);
+}
+.durf-note p:last-child { margin-bottom: 0; }
+
+/* ---- figure ------------------------------------------------------------- */
+.durf-figure { margin: 2rem 0 2.5rem; }
+.durf-figure--wide { margin-left: calc(50% - min(31rem, 48vw)); margin-right: calc(50% - min(31rem, 48vw)); }
+.durf-fig-scroll { overflow-x: auto; }
+.durf-figure svg { display: block; width: 100%; height: auto; min-width: 640px; }
+.durf-figure figcaption {
+  font-size: .9rem;
+  color: var(--sds--color--gray--500);
+  margin: .75rem auto 0;
+  max-width: 43rem;
+  padding: 0 .25rem;
+}
+svg text { font-family: "Source Sans 3", "Segoe UI", Arial, sans-serif; fill: var(--sds--color--black); }
+svg .h { font-size: 14px; font-weight: 700; }
+svg .s { font-size: 12px; }
+svg .muted { fill: var(--sds--color--gray--500); }
+svg .frame { fill: var(--fig-frame-bg); stroke: var(--fig-frame); stroke-width: 1.2; stroke-dasharray: 6 4; }
+svg .frame.outside { fill: var(--fig-out-bg); stroke: var(--sds--color--gray--300); }
+svg .data rect { fill: var(--fig-data-bg); stroke: var(--fig-data-line); }
+svg .data text { fill: var(--fig-data-ink); }
+svg .ctr rect { fill: var(--fig-ctr-bg); stroke: var(--fig-ctr-line); stroke-width: 1.4; }
+svg .ctr text { fill: var(--fig-ctr-ink); }
+svg .tool rect { fill: var(--fig-tool-bg); stroke: var(--fig-tool-line); }
+svg .tool text { fill: var(--fig-tool-ink); }
+svg .a-ctr { stroke: var(--fig-ctr-line); stroke-width: 2; fill: none; stroke-linejoin: round; }
+svg .a-neu { stroke: var(--sds--color--gray--400); stroke-width: 1.3; fill: none; }
+svg .mk-ctr { stroke: var(--fig-ctr-line); }
+svg .mk-neu { stroke: var(--sds--color--gray--400); }
+
+/* ---- footer -------------------------------------------------------------- */
+.durf-footer {
+  border-top: .0625rem solid var(--sds--color--gray--200);
+  padding: 2rem 0 3rem;
+  color: var(--sds--color--gray--500);
+  font-size: .875rem;
+}
+.durf-footer p { margin: 0 0 .5rem; }
+.durf-footer a { font-weight: 600; }
+
+/* ---- theme toggle (same component as the position paper) ---------------- */
+.durf-theme-toggle {
+  display: inline-flex;
+  gap: .125rem;
+  padding: .1875rem;
+  margin-left: auto;
+  align-self: flex-start;
+  border: .0625rem solid var(--sds--color--gray--200);
+  border-radius: .5rem;
+  background: var(--sds--color--gray--100);
+}
+.durf-theme-toggle button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: .375rem;
+  background: transparent;
+  color: var(--sds--color--gray--500);
+  cursor: pointer;
+}
+.durf-theme-toggle button:hover { color: var(--sds--color--black); }
+.durf-theme-toggle button[aria-pressed="true"] {
+  background: var(--sds--color--white);
+  color: var(--durf--blue);
+  box-shadow: 0 .0625rem .125rem rgba(0, 0, 0, .16);
+}
+.durf-theme-toggle svg { width: 1rem; height: 1rem; }
+.durf-visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 30rem) {
+  body { font-size: 16px; }
+  .durf-title { font-size: 1.875rem; }
+  .durf-header__logo { width: 5rem; height: 5rem; }
+  .durf-content pre { font-size: .74rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="durf-header">
+  <div class="durf-shell">
+    <div class="durf-header__inner">
+      <img class="durf-header__logo" src="assets/durf-logo.svg" alt="Dutch Repository Federation — making Dutch research global, open and resilient" width="112" height="112">
+      <div class="durf-header__text">
+        <p class="durf-eyebrow">Dutch Repository Federation</p>
+        <h1 class="durf-title">No lake required: data products and data contracts for DURF<span class="durf-draft-tag">Draft</span></h1>
+      </div>
+      <div class="durf-theme-toggle" role="group" aria-label="Colour theme">
+        <button type="button" data-theme-choice="light" aria-pressed="false" title="Light theme">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <span class="durf-visually-hidden">Light theme</span>
+        </button>
+        <button type="button" data-theme-choice="dark" aria-pressed="false" title="Dark theme">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <span class="durf-visually-hidden">Dark theme</span>
+        </button>
+        <button type="button" data-theme-choice="system" aria-pressed="true" title="Match system setting">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          <span class="durf-visually-hidden">Match system setting</span>
+        </button>
+      </div>
+    </div>
+    <p class="durf-lede">In the Dutch Repository Federation, every party delivers its data as a product, according to a contract. That's how Dutch research output becomes resilient, open and global.</p>
+    <p class="durf-byline">Maurice Vanderfeesten · September 2026</p>
+    <nav class="durf-header__links">
+      <a href="https://durf-project.github.io/position-paper/">DURF position paper</a>
+      <a href="https://github.com/durf-project/durf-data-mesh-architecture/tree/main/contracts">Example contracts</a>
+      <a href="https://surf-ori.github.io/ori-data-mesh-architecture/">Companion post: ORI data mesh</a>
+      <a href="https://github.com/durf-project/durf-data-mesh-architecture">View source on GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main class="durf-shell">
+<article class="durf-content">
+
+<p>A while ago I wrote <a href="https://surf-ori.github.io/ori-data-mesh-architecture/">a post for the BROCCOLI team</a> arguing that they should borrow a few ideas from <a href="https://www.datamesh-architecture.com/">data mesh architecture</a>. BROCCOLI is building a data lake: it harvests OpenAlex, OpenAIRE, Crossref and the Dutch CRIS systems into one place and refines them through bronze, silver and gold layers into dashboards. Data products, data contracts and a marketplace fit that picture well.</p>
+
+<p>The <a href="https://durf-project.github.io/position-paper/">Dutch Repository Federation</a> (DURF) is a different animal. Nobody is going to copy all of Dutch research output into one central place, and nobody should. The <a href="https://durf-project.github.io/position-paper/#the-durf-information-chain">information chain</a> in the position paper runs through systems that already exist and are run by different parties:</p>
+
+<ul>
+  <li>seventy-odd repositories and CRIS systems at the universities and medical centres;</li>
+  <li>OpenAIRE's harvester, Graph and Broker;</li>
+  <li>the KB's e-Depot and URN:NBN resolver;</li>
+  <li>the Netherlands Research Portal;</li>
+  <li>publishers at one end and the world's search engines at the other.</li>
+</ul>
+
+<p>The DURF proposal puts it plainly: the project <em>"does not build a single technical infrastructure with a single point of failure. Rather it leverages existing components and standards … and creates the necessary links between them."</em></p>
+
+<p>So there's no lake, and no bronze, silver or gold. What's left of data mesh when you take the lake away? Two ideas, and in a federation they matter even more than they did for BROCCOLI: <strong>data as a product</strong>, and <strong>data contracts first</strong>.</p>
+
+<h2 id="the-idea">The idea in one paragraph</h2>
+
+<p>Every link in the DURF chain relies on the link before it. The KB can only preserve a file if the repository says where the file is. The Portal can only show a university's output if the records carry that university's ROR ID. Google Scholar can only index an article if the landing page has the right meta tags. Today those dependencies are mostly implicit, and they hold as long as someone happens to remember them. My proposal is to make each one explicit. At every point where data passes from one party to another, the delivering party treats what it hands over as a <strong>product</strong>, owned by a named data team. It then writes down what it promises in a <strong>data contract</strong>: which fields, in which format, how complete, how fresh, and how you can check. The receiving party builds against the contract, not against whatever it happened to find last week.</p>
+
+<div class="durf-callout">
+  <span class="durf-callout__label">What we keep, what we leave out</span>
+  <p><strong>Keep:</strong> data products with an owner and a team; data contracts in the <a href="https://bitol-io.github.io/open-data-contract-standard/latest/">Open Data Contract Standard</a>; federated governance; contracts first, starting from what the consumer needs.</p>
+  <p><strong>Leave out:</strong> a central lake; medallion layers; one shared pipeline stack. Each party keeps its own systems and its own tooling. The contracts are the only thing we share.</p>
+</div>
+
+<h2 id="the-picture">What it looks like</h2>
+
+<p>Here's the DURF information chain again, redrawn as data products. Each dashed frame is one data product, with the party that owns it. Each purple box is a contract: an output port that the producer promises to keep. The contract lives with the producer, because the producer is the one making the promise. Purple arrows are the dependencies the contract covers.</p>
+
+<figure class="durf-figure durf-figure--wide">
+<div class="durf-fig-scroll">
+<svg viewBox="0 0 960 660" role="img" aria-labelledby="f1t f1d">
+<title id="f1t">The DURF information chain as data products and data contracts</title>
+<desc id="f1d">Four data products, each with an owner. Publishing platforms (publisher_deliveries, outside DURF governance) deliver full text and CC0 metadata to institutional repositories under contract C3. Each university library (cris_publications) offers two output ports: C1, CRIS publications in the Dutch application profile, harvested by OpenAIRE PROVIDE, and C2, landing pages and sitemaps for other indexes. OpenAIRE (openaire_graph: PROVIDE, Graph, Broker) offers three output ports: C4, enrichment events back to the institutions; C5, the Dutch slice of the Graph for the Netherlands Research Portal and other indexes; and C6, a preservation feed for the KB e-Depot. The KB (edepot_preservation) offers C7, preservation status and URN:NBN, back to the institutions and to the URN:NBN resolver.</desc>
+<defs>
+<marker id="m-ctr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" class="mk-ctr" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="m-neu" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" class="mk-neu" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+
+<!-- Publishing platforms -->
+<rect class="frame outside" x="16" y="70" width="190" height="188" rx="12"/>
+<text class="h" x="111" y="94" text-anchor="middle">publisher_deliveries</text>
+<text class="s muted" x="111" y="112" text-anchor="middle">Owner: each publisher</text>
+<text class="s muted" x="111" y="128" text-anchor="middle">Outside DURF governance</text>
+<g class="tool"><rect x="28" y="142" width="166" height="48" rx="8"/><text class="h" x="111" y="162" text-anchor="middle">Publishers</text><text class="s" x="111" y="179" text-anchor="middle">and preprint servers</text></g>
+<g class="ctr"><rect x="28" y="198" width="166" height="48" rx="8"/><text class="h" x="111" y="218" text-anchor="middle">C3 · Full text</text><text class="s" x="111" y="235" text-anchor="middle">JATS + files, CC0</text></g>
+
+<!-- Institution -->
+<rect class="frame" x="236" y="70" width="220" height="310" rx="12"/>
+<text class="h" x="346" y="94" text-anchor="middle">cris_publications</text>
+<text class="s muted" x="346" y="112" text-anchor="middle">One per university library</text>
+<text class="s muted" x="346" y="128" text-anchor="middle">Owner: the library's data team</text>
+<g class="data"><rect x="250" y="142" width="192" height="56" rx="8"/><text class="h" x="346" y="165" text-anchor="middle">Repository / CRIS</text><text class="s" x="346" y="184" text-anchor="middle">publications and full texts</text></g>
+<g class="ctr"><rect x="250" y="214" width="192" height="48" rx="8"/><text class="h" x="346" y="234" text-anchor="middle">C1 · CRIS publications</text><text class="s" x="346" y="251" text-anchor="middle">Dutch application profile</text></g>
+<g class="ctr"><rect x="250" y="274" width="192" height="48" rx="8"/><text class="h" x="346" y="294" text-anchor="middle">C2 · Discovery</text><text class="s" x="346" y="311" text-anchor="middle">landing pages, sitemap</text></g>
+<text class="s muted" x="346" y="346" text-anchor="middle">Consumes C3, C4 and C7</text>
+<text class="s muted" x="346" y="364" text-anchor="middle">Data owner · steward · engineer</text>
+
+<!-- OpenAIRE -->
+<rect class="frame" x="496" y="70" width="220" height="392" rx="12"/>
+<text class="h" x="606" y="94" text-anchor="middle">openaire_graph</text>
+<text class="s muted" x="606" y="112" text-anchor="middle">Owner: OpenAIRE</text>
+<text class="s muted" x="606" y="128" text-anchor="middle">One product, three output ports</text>
+<g class="tool"><rect x="510" y="142" width="192" height="40" rx="8"/><text class="h" x="606" y="167" text-anchor="middle">PROVIDE validator</text></g>
+<g class="data"><rect x="510" y="196" width="192" height="48" rx="8"/><text class="h" x="606" y="216" text-anchor="middle">OpenAIRE Graph</text><text class="s" x="606" y="233" text-anchor="middle">deduplicated, enriched</text></g>
+<g class="tool"><rect x="510" y="258" width="192" height="40" rx="8"/><text class="h" x="606" y="283" text-anchor="middle">Broker</text></g>
+<g class="ctr"><rect x="510" y="312" width="192" height="40" rx="8"/><text class="h" x="606" y="337" text-anchor="middle">C4 · Enrichment events</text></g>
+<g class="ctr"><rect x="510" y="360" width="192" height="40" rx="8"/><text class="h" x="606" y="385" text-anchor="middle">C6 · e-Depot feed</text></g>
+<g class="ctr"><rect x="510" y="408" width="192" height="40" rx="8"/><text class="h" x="606" y="433" text-anchor="middle">C5 · Dutch Graph slice</text></g>
+<line class="a-neu" x1="606" y1="182" x2="606" y2="193" marker-end="url(#m-neu)"/>
+<line class="a-neu" x1="606" y1="244" x2="606" y2="255" marker-end="url(#m-neu)"/>
+<line class="a-neu" x1="606" y1="298" x2="606" y2="309" marker-end="url(#m-neu)"/>
+
+<!-- KB -->
+<rect class="frame" x="746" y="150" width="200" height="242" rx="12"/>
+<text class="h" x="846" y="174" text-anchor="middle">edepot_preservation</text>
+<text class="s muted" x="846" y="192" text-anchor="middle">Owner: KB</text>
+<g class="data"><rect x="758" y="206" width="176" height="48" rx="8"/><text class="h" x="846" y="226" text-anchor="middle">KB e-Depot</text><text class="s" x="846" y="243" text-anchor="middle">long-term preservation</text></g>
+<g class="ctr"><rect x="758" y="268" width="176" height="48" rx="8"/><text class="h" x="846" y="288" text-anchor="middle">C7 · Preservation</text><text class="s" x="846" y="305" text-anchor="middle">status, URN:NBN, fixity</text></g>
+<g class="tool"><rect x="758" y="336" width="176" height="40" rx="8"/><text class="h" x="846" y="361" text-anchor="middle">URN:NBN resolver</text></g>
+<line class="a-neu" x1="846" y1="316" x2="846" y2="333" marker-end="url(#m-neu)"/>
+
+<!-- Consumers -->
+<g class="tool"><rect x="510" y="500" width="192" height="56" rx="8"/><text class="h" x="606" y="523" text-anchor="middle">NL Research Portal</text><text class="s" x="606" y="542" text-anchor="middle">OpenAIRE CONNECT</text></g>
+<g class="tool"><rect x="758" y="500" width="176" height="56" rx="8"/><text class="h" x="846" y="523" text-anchor="middle">Other indexes</text><text class="s" x="846" y="542" text-anchor="middle">OpenAlex, Scholar, EOSC</text></g>
+
+<!-- Contract arrows -->
+<path class="a-ctr" d="M194 222 H221 V170 H246" marker-end="url(#m-ctr)"/>
+<path class="a-ctr" d="M442 238 H476 V162 H506" marker-end="url(#m-ctr)"/>
+<path class="a-ctr" d="M250 298 H224 V590 H846 V560" marker-end="url(#m-ctr)"/>
+<path class="a-ctr" d="M510 332 H460" marker-end="url(#m-ctr)"/>
+<path class="a-ctr" d="M702 380 H726 V230 H754" marker-end="url(#m-ctr)"/>
+<path class="a-ctr" d="M606 448 V496" marker-end="url(#m-ctr)"/>
+<path class="a-ctr" d="M702 428 H736 V528 H754" marker-end="url(#m-ctr)"/>
+<path class="a-ctr" d="M934 292 H952 V46 H346 V66" marker-end="url(#m-ctr)"/>
+
+<!-- Legend -->
+<rect class="frame" x="16" y="618" width="22" height="14" rx="3"/>
+<text class="s" x="46" y="630">Data product, with its owner</text>
+<g class="ctr"><rect x="232" y="618" width="14" height="14" rx="3"/></g>
+<text class="s" x="254" y="630">Contract: output port, kept by the producer</text>
+<g class="data"><rect x="506" y="618" width="14" height="14" rx="3"/></g>
+<text class="s" x="528" y="630">Data</text>
+<g class="tool"><rect x="580" y="618" width="14" height="14" rx="3"/></g>
+<text class="s" x="602" y="630">System or consumer</text>
+<line class="a-ctr" x1="740" y1="625" x2="772" y2="625" marker-end="url(#m-ctr)"/>
+<text class="s" x="780" y="630">Covered by a contract</text>
+</svg>
+</div>
+<figcaption>The DURF information chain as four data products and seven contracts. There's no central store: each party keeps its own data in its own systems, and the purple boxes are the only interfaces between them. Handoffs inside a single party, such as PROVIDE → Graph → Broker inside OpenAIRE, are that party's own business (grey arrows).</figcaption>
+</figure>
+
+<p>The seven example contracts are in the <a href="https://github.com/durf-project/durf-data-mesh-architecture/tree/main/contracts"><code>contracts/</code></a> folder of this repository. They're all drafts:</p>
+
+<div class="durf-table-wrap">
+<table>
+<thead><tr><th></th><th>Contract</th><th>Producer → consumer</th><th>Theme</th></tr></thead>
+<tbody>
+<tr><td>C1</td><td><a href="https://github.com/durf-project/durf-data-mesh-architecture/blob/main/contracts/institutions/durf-cris-publications-v1.odcs.yaml"><code>durf-cris-publications-v1</code></a></td><td>University library → OpenAIRE PROVIDE</td><td>2</td></tr>
+<tr><td>C2</td><td><a href="https://github.com/durf-project/durf-data-mesh-architecture/blob/main/contracts/institutions/durf-repository-discovery-v1.odcs.yaml"><code>durf-repository-discovery-v1</code></a></td><td>University library → search engines and indexes</td><td>5</td></tr>
+<tr><td>C3</td><td><a href="https://github.com/durf-project/durf-data-mesh-architecture/blob/main/contracts/publishing-platforms/durf-publisher-fulltext-v1.odcs.yaml"><code>durf-publisher-fulltext-v1</code></a></td><td>Publishing platform → university library</td><td>3</td></tr>
+<tr><td>C4</td><td><a href="https://github.com/durf-project/durf-data-mesh-architecture/blob/main/contracts/openaire/durf-broker-enrichment-events-v1.odcs.yaml"><code>durf-broker-enrichment-events-v1</code></a></td><td>OpenAIRE Broker → university library</td><td>2</td></tr>
+<tr><td>C5</td><td><a href="https://github.com/durf-project/durf-data-mesh-architecture/blob/main/contracts/openaire/durf-openaire-graph-nl-publications-v1.odcs.yaml"><code>durf-openaire-graph-nl-publications-v1</code></a></td><td>OpenAIRE Graph → Research Portal, other indexes</td><td>5, 6</td></tr>
+<tr><td>C6</td><td><a href="https://github.com/durf-project/durf-data-mesh-architecture/blob/main/contracts/openaire/durf-openaire-graph-edepot-feed-v1.odcs.yaml"><code>durf-openaire-graph-edepot-feed-v1</code></a></td><td>OpenAIRE Graph → KB e-Depot</td><td>4</td></tr>
+<tr><td>C7</td><td><a href="https://github.com/durf-project/durf-data-mesh-architecture/blob/main/contracts/kb/durf-edepot-preservation-status-v1.odcs.yaml"><code>durf-edepot-preservation-status-v1</code></a></td><td>KB e-Depot → university library, URN:NBN resolver</td><td>4</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="data-teams">Every university gets a data team</h2>
+
+<p>In data mesh, a data product isn't just a dataset. It's the data plus the code that produces it, the contract that describes it, and above all a team that's accountable for it. For DURF that means every participating institution runs its repository or CRIS as a data product called <code>cris_publications</code>, owned by a small data team with three roles:</p>
+
+<ul>
+  <li><strong>Data owner</strong>: the library director or head of research support. Accountable for the institution keeping its contracts, and the person who signs the position paper.</li>
+  <li><strong>Data steward</strong>: the repository or CRIS manager. Looks after metadata quality, reads the validator reports and acts on the Broker's suggestions.</li>
+  <li><strong>Data engineer</strong>: the functional or technical CRIS administrator. Keeps the OAI-PMH endpoint, the CERIF mapping and the landing pages running.</li>
+</ul>
+
+<p>That sounds like a lot of new people, but it isn't. These are the people who already run the repository. The DURF proposal counts on <em>"approximately 0.1–0.2 FTE per institution allocated from existing repository and CRIS managers' responsibilities"</em> after the project ends. What changes isn't the headcount. It's that their work now has a clear shape: here is our product, here is what we promise, here is how anyone can check.</p>
+
+<p>The same goes for the other parties. OpenAIRE runs <code>openaire_graph</code> as one data product with three output ports: enrichment events for the institutions, the Dutch slice of the Graph for the Portal and the indexes, and a preservation feed for the KB. The KB runs <code>edepot_preservation</code> and reports back what it has safely stored. Each has its own data team, its own tooling and its own release rhythm. The only thing the others see is the contract.</p>
+
+<p>This is also what the position paper means when it says <a href="https://durf-project.github.io/position-paper/#systems-and-parties">parties, not systems, take on commitments</a>. A CRIS can't sign a pledge. The data team behind it can, and a data contract is how that pledge becomes specific enough to check. Each contract makes one cell of the <a href="https://durf-project.github.io/position-paper/#rights-and-responsibilities">rights and responsibilities matrix</a> concrete: the matrix says <em>who</em> owes <em>whom</em>, the contract says <em>exactly what</em>.</p>
+
+<h2 id="dutch-profile">The first contract: a Dutch application profile</h2>
+
+<p>Everything downstream depends on C1, the contract between each institution and OpenAIRE. If a record reaches the Graph without a DOI, the Graph can't deduplicate it. If it arrives without a ROR ID, the Portal can't attribute it to the right university. Without a file location, the KB has nothing to preserve. Without an access right, nobody downstream knows what they may show.</p>
+
+<p>The good news is we don't have to invent C1. The <a href="https://openaire-guidelines-for-cris-managers.readthedocs.io/en/v1.2.0/">OpenAIRE Guidelines for CRIS Managers 1.2</a> already define the structure and vocabularies:</p>
+
+<ul>
+  <li>CERIF-XML over OAI-PMH, with metadata prefix <code>oai_cerif_openaire</code> and the set <code>openaire_cris_publications</code>;</li>
+  <li>COAR vocabularies for resource types, access rights and version types.</li>
+</ul>
+
+<p>What the guidelines can't know is what <em>Dutch</em> consumers downstream rely on. So C1 takes the guidelines as its base and tightens a handful of fields. That tightened contract <em>is</em> the Dutch application profile the DURF proposal wants to develop, replacing the current NL-DIDL/MODS requirements.</p>
+
+<div class="durf-table-wrap">
+<table>
+<thead><tr><th>Field</th><th>OpenAIRE CRIS 1.2</th><th>Dutch profile</th><th>Who relies on it</th></tr></thead>
+<tbody>
+<tr><td>DOI</td><td>optional</td><td class="nl">mandatory if it exists</td><td>Graph deduplication, every index</td></tr>
+<tr><td>Author ORCID</td><td>recommended</td><td class="nl">mandatory if known</td><td>Graph, Portal, researcher profiles</td></tr>
+<tr><td>Affiliation ROR ID</td><td>optional</td><td class="nl">mandatory for own authors</td><td>Portal attribution, monitoring</td></tr>
+<tr><td>Access rights (COAR)</td><td>mandatory if applicable</td><td class="nl">mandatory</td><td>e-Depot, Portal, indexes</td></tr>
+<tr><td>Embargo end date</td><td>not a separate field</td><td class="nl">mandatory if embargoed</td><td>Taverne, e-Depot access policy</td></tr>
+<tr><td>Licence</td><td>optional</td><td class="nl">mandatory if applicable</td><td>Portal, reuse</td></tr>
+<tr><td>File location + MIME type</td><td>optional</td><td class="nl">mandatory for every file, open or not</td><td>e-Depot, full-text monitoring</td></tr>
+<tr><td>File checksum</td><td>n/a</td><td class="nl">recommended</td><td>e-Depot fixity check</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Written down as a data contract, the relevant part looks like this. Most of the file is descriptions, because the descriptions are the point: a CRIS manager at any university should be able to read it and know what to do.</p>
+
+<pre><code><span class="c"># contracts/institutions/durf-cris-publications-v1.odcs.yaml (shortened)</span>
+apiVersion: v3.1.0
+kind: DataContract
+id: durf-cris-publications-v1
+name: Institutional publications, Dutch application profile of the
+      OpenAIRE Guidelines for CRIS Managers 1.2
+version: 0.1.0
+status: draft
+domain: institutional-research-output
+dataProduct: cris_publications
+customProperties:
+  - property: durfTheme
+    value: 2
+  - property: oaiPmhMetadataPrefix
+    value: oai_cerif_openaire
+  - property: replaces
+    value: NL-DIDL/MODS (EduStandaard)
+team:
+  name: institution-data-team
+  members:
+    - { username: data-owner,    role: Data owner }
+    - { username: data-steward,  role: Data steward }
+    - { username: data-engineer, role: Data engineer }
+slaProperties:
+  - { property: latency, value: 7, unit: d }        <span class="c"># in CRIS → on the endpoint</span>
+  - { property: retention, value: persistent }      <span class="c"># deletions are announced, never dropped</span>
+servers:
+  - server: production
+    type: api
+    location: https://cris.institution.example/ws/oai?verb=ListRecords&amp;...
+schema:
+  - name: publication
+    physicalName: cerif:Publication
+    properties:
+      - name: doi
+        physicalName: DOI
+        description: >-
+          Mandatory whenever the publication has one (MA). The OpenAIRE
+          guidelines leave it optional; NL requires it, because it is the
+          main deduplication key in the Graph and for the indexes.
+      - name: authors
+        items:
+          properties:
+            - name: orcid                   <span class="c"># MA in NL (R in OpenAIRE)</span>
+            - name: affiliation_ror         <span class="c"># MA in NL: at least the own institution</span>
+      - name: access_rights
+        required: true                      <span class="c"># M in NL: e-Depot, Portal and indexes branch on it</span>
+      - name: embargo_end_date              <span class="c"># NL addition, for Taverne</span>
+      - name: file_locations                <span class="c"># MA for every file, whatever its access rights</span>
+    quality:
+      - type: custom
+        engine: openaire-provide-validator
+        description: >-
+          The OpenAIRE PROVIDE validator for the CRIS Guidelines 1.2 profile
+          passes with no errors. This is the contract test.
+      - type: text
+        description: Every author affiliated with the producing institution
+          carries the institution's ROR ID.</code></pre>
+
+<p>Two things I like about this. First, the <code>authoritativeDefinitions</code> in the full file point to the OpenAIRE guidelines. So the Dutch profile is visibly a thin layer on top of an international standard, not a national fork. Second, the quality section says out loud what the contract test is: the <a href="https://provide.openaire.eu/">OpenAIRE PROVIDE</a> validator, which already runs on every harvest. The Dutch additions, like "every own author has the ROR ID", are simple enough to check next to it.</p>
+
+<p>Who owns the <em>contract</em> itself, as opposed to the data? In a federation, not the individual institution: then there would be seventy slightly different profiles. The DURF proposal has the answer ready. A <strong>NL Research Information Content Board</strong>, formed through EduStandaard, stewards the profile. Institutions implement it. The board changes it through a public process. That's federated governance in its purest form: we agree on a few rules together, and each data team makes sure they're met.</p>
+
+<h2 id="downstream">OpenAIRE and the KB are data teams too</h2>
+
+<p>It would be easy to read all this as "the universities must deliver, and everyone else consumes". But the chain only works if the promises run both ways. In the diagram, four of the seven contracts are kept by OpenAIRE or the KB, not by the universities:</p>
+
+<ul>
+  <li><strong>C4, enrichment events.</strong> Once the Graph has aggregated and deduplicated a record against every other source, the Broker tells the institution what it could add: a missing DOI, an ORCID, a funder, an open access copy found elsewhere. The contract fixes the topics, the trust score, and that every event points to the record's own ID in the source CRIS. It also says how long an event stays available. That's the feedback loop of theme 2, and it only works if the institution can rely on it.</li>
+  <li><strong>C5, the Dutch Graph slice.</strong> The dataset behind the Netherlands Research Portal, and the Dutch contribution the Graph passes on to other indexes and EOSC nodes. The key promise: every record harvested through C1 is in there, and the source CRIS ID travels with it, so any consumer can trace a record back to its producer.</li>
+  <li><strong>C6, the e-Depot feed.</strong> An incremental feed of Dutch publications, one row per full-text file: URL, MIME type, checksum and access right. Deletions are announced, never silently dropped. The KB builds one harvester instead of seventy, and gets records that are already deduplicated.</li>
+  <li><strong>C7, preservation status.</strong> The KB's side of the bargain. For every file it pulled, it reports back whether it's safely preserved, under which URN:NBN, and whether the last fixity check passed. The institution writes the URN:NBN back into its CRIS, and it flows into C1 again as an identifier. The loop closes.</li>
+</ul>
+
+<p>A word on the "Broker to Graph" and "Graph to e-Depot" steps. PROVIDE, the Graph and the Broker are all run by OpenAIRE, so I've drawn them as <em>one</em> data product with three output ports, rather than three products with contracts between them. Contracts matter where responsibility changes hands. Inside OpenAIRE, OpenAIRE may well use contracts between its own teams, and that would be good practice. But DURF doesn't need to see them. What DURF needs is a firm promise at each point where data leaves OpenAIRE: towards the institutions (C4), the Portal and the indexes (C5), and the KB (C6).</p>
+
+<h2 id="outside">Contracts with parties outside DURF</h2>
+
+<p>Two of the contracts cross the federation's border, and they behave differently.</p>
+
+<p><strong>C3, publisher deliveries</strong>, runs from publishers into the repositories: JATS metadata (CC0) plus the full-text files, delivered over SWORD, routed on the institution's ROR ID. Publishers don't sign the DURF position paper. So this contract only has force where it's written into an agreement, such as the open access terms of a national read-and-publish deal. Without one, it still has a use: it describes exactly what a DURF repository is ready to receive. Handing a publisher a contract that fits on one page makes that conversation a lot easier.</p>
+
+<p><strong>C2, discovery</strong>, runs the other way, from the repositories to Google Scholar, OpenAlex, BASE, CORE and anyone else with a crawler. Those consumers will never sign anything either. Here the contract is a one-sided promise: every publication gets a stable landing page with <code>citation_*</code> meta tags, a working <code>citation_pdf_url</code>, and schema.org JSON-LD, all listed in a sitemap. DURF checks that promise on behalf of the consumers.</p>
+
+<h2 id="monitors">The monitors in the proposal are contract tests</h2>
+
+<p>This is where it clicked for me. The DURF proposal's software management plan lists five monitors to build. Put them next to the contracts:</p>
+
+<div class="durf-table-wrap">
+<table>
+<thead><tr><th>Monitor in the DURF proposal</th><th>Checks the contract</th></tr></thead>
+<tbody>
+<tr><td>Metadata compliancy: validates repositories and CRIS systems against the OpenAIRE CERIF standard and the Dutch application profile</td><td>C1, schema and quality rules</td></tr>
+<tr><td>Core PID comprehensiveness: missing DOIs, ORCIDs, RORs, grant IDs</td><td>C1, the NL tightenings</td></tr>
+<tr><td>Full-text comprehensiveness: records without full text, broken links</td><td>C1 <code>file_locations</code>; C3 deliveries</td></tr>
+<tr><td>Preservation status: full text stored in the e-Depot</td><td>C6 and C7</td></tr>
+<tr><td>Visibility: <code>robots.txt</code>, <code>sitemap.xml</code>, schema.org metadata</td><td>C2</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Every monitor is a contract test, and every contract gets a monitor. That gives DURF a nice design rule: <strong>no monitor without a contract, and no contract without a monitor</strong>. The contract says what "good" means. The monitor shows, per institution, how far off we are. And because the contract is written by the whole federation, a red cell on a dashboard isn't one party pointing at another. It's everyone looking at the same agreement.</p>
+
+<p>We might not even have to build the dashboard from scratch. The <a href="http://ori-dashboard.surf.nl/">ORI Quality Monitoring</a> dashboard from PID2Portal already shows data stewards how complete their institution's metadata is, per source. A DURF tab that reads the contract tests would sit very naturally next to it.</p>
+
+<h2 id="contracts-first">Contracts first, starting from the consumer</h2>
+
+<p>In the BROCCOLI post, my main plea was to start from the user journey and not from the data. The same holds here, just with the chain instead of a dashboard. Don't start by asking "what can our CRIS export?". Start at the far end of the chain and work back:</p>
+
+<ol>
+  <li><strong>What do the end consumers need?</strong> The e-Depot needs files with checksums. The Portal needs ROR IDs and access rights. The indexes need DOIs and PDF links. That fixes C5, C6 and C2.</li>
+  <li><strong>What must OpenAIRE receive to deliver that?</strong> That fixes C1, and it's why C1 is stricter than the plain OpenAIRE guidelines.</li>
+  <li><strong>What do the institutions need back to keep their promise?</strong> That fixes C4 and C7, and what they need from publishers fixes C3.</li>
+  <li><strong>Only then:</strong> the mapping in each CRIS, the OAI-PMH configuration, the harvesting and feeds. Each data team builds its own part with its own tools, and tests it against the contract.</li>
+</ol>
+
+<p>A house rule to go with it: <strong>no field in the Dutch profile without a consumer downstream who needs it</strong>. Every NL tightening in C1 names who relies on it. If nobody does, it goes. That keeps the profile small, and it gives the Content Board a simple test for every change request.</p>
+
+<h2 id="changes">How contracts change</h2>
+
+<p>Contracts are YAML files in a git repository, so they change the way code does: through a pull request, reviewed by the parties who depend on them. I'd suggest a few simple rules.</p>
+
+<ul>
+  <li>Adding an optional field is a minor version (<code>0.2.0</code>). Consumers can ignore it.</li>
+  <li>Making a field mandatory, or removing one, is a new major version (<code>durf-cris-publications-v2</code>). It runs <em>next to</em> v1 for an agreed transition period, and no consumer is broken overnight.</li>
+  <li>Changes to C1 go through the Content Board. Changes to the other contracts are agreed between producer and consumers, with DURF governance as referee.</li>
+  <li>Every contract says in its <code>customProperties</code> which DURF theme it serves and which arrow in the diagram it governs, so the position paper and the contracts can't drift apart.</li>
+</ul>
+
+<p>The move from NL-DIDL/MODS to the CERIF profile is, in these terms, exactly such a major version change. We'll learn how to run a transition period by doing that one well.</p>
+
+<h2 id="unsure">Things I'm not sure about yet</h2>
+
+<ul>
+  <li><strong>CERIF and Dublin Core.</strong> The proposal talks about translating NL-DIDL/MODS to <em>"OpenAIRE CERIF and DC guidelines"</em>. Not every repository is a CRIS; some will expose the <a href="https://openaire-guidelines-for-literature-repository-managers.readthedocs.io/">OpenAIRE Guidelines for Literature Repositories</a> instead. In contract terms, that's one logical schema with two physical output ports. I think it should be one contract with two servers rather than two contracts, but I'd like to hear from the Content Board.</li>
+  <li><strong>Restricted and embargoed files.</strong> The KB should preserve those too, but the Graph only has what's public. The e-Depot may need direct, authenticated access to each repository for those files. That would be an eighth contract, between the KB and each institution.</li>
+  <li><strong>How Broker events arrive.</strong> Broker subscriptions, API pull, or <a href="https://coar-notify.net/">COAR Notify</a> straight into the repository? C4 fixes the content and leaves the channel open. Maybe that's right; maybe it should pick one.</li>
+  <li><strong>The exact field lists.</strong> The obligation levels I give for the OpenAIRE guidelines, and the Graph field names in C5 and C6, are my reading. They need checking against the published XSD and the current Graph API before anyone relies on them.</li>
+  <li><strong>Enforcement.</strong> A contract between federation members is backed by the position paper and the NaMeCo agreements. What happens when an institution doesn't keep it for a year? I think the honest answer is "it shows up red on the dashboard, and the other members ask about it". That may well be enough. But it's worth saying out loud.</li>
+</ul>
+
+<h2 id="where-to-start">So, where to start?</h2>
+
+<ol>
+  <li><strong>Pick two or three pilot institutions</strong> with different CRIS or repository platforms, and have their data teams read C1 against their current OAI-PMH output. The gap list is the first real deliverable.</li>
+  <li><strong>Hand C1 to the Content Board</strong> as the starting draft of the Dutch application profile, once it's formed through EduStandaard.</li>
+  <li><strong>Sit down with OpenAIRE and the KB</strong> about C6 and C7. These two decide whether theme 4 works, and they're the contracts with the fewest parties around the table.</li>
+  <li><strong>Wire the first monitor to C1</strong>: the PROVIDE validator result plus the NL rules, per institution, visible to everyone.</li>
+  <li><strong>Keep the contracts in this repository</strong>, run <code>datacontract lint</code> on every pull request, and link each one from the position paper's pledges.</li>
+</ol>
+
+<p>None of this needs a lake, a new platform or a big central team. It needs each party to say out loud what it delivers, write that down in a format the others can read and test, and keep the promise. That's what makes Dutch research output resilient, open and global: not one strong system, but a chain of kept promises.</p>
+
+<p>The contracts are drafts and so is this post. If you run a repository, a CRIS, the Graph or the e-Depot and you think I've got your part wrong, please <a href="https://github.com/durf-project/durf-data-mesh-architecture/issues">open an issue</a> or send a pull request. That's how contracts are supposed to change anyway.</p>
+
+</article>
+</main>
+
+<footer class="durf-footer">
+  <div class="durf-shell">
+    <p><a href="https://creativecommons.org/licenses/by/4.0/" rel="license">CC BY 4.0</a> · © Maurice Vanderfeesten. This work may be shared and adapted with attribution.</p>
+    <p>Part of the <a href="https://github.com/durf-project">Dutch Repository Federation</a>. Read it together with the <a href="https://durf-project.github.io/position-paper/">DURF position paper</a> and the companion post on <a href="https://surf-ori.github.io/ori-data-mesh-architecture/">data mesh for Open Research Information</a>.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var STORAGE_KEY = 'durf-theme';
+
+  function getStoredChoice() {
+    try { return localStorage.getItem(STORAGE_KEY) || 'system'; } catch (e) { return 'system'; }
+  }
+
+  function setStoredChoice(choice) {
+    try {
+      if (choice === 'system') localStorage.removeItem(STORAGE_KEY);
+      else localStorage.setItem(STORAGE_KEY, choice);
+    } catch (e) {}
+  }
+
+  function applyTheme(choice) {
+    if (choice === 'light' || choice === 'dark') {
+      document.documentElement.setAttribute('data-theme', choice);
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+    var buttons = document.querySelectorAll('.durf-theme-toggle button');
+    for (var i = 0; i < buttons.length; i++) {
+      var pressed = buttons[i].getAttribute('data-theme-choice') === choice;
+      buttons[i].setAttribute('aria-pressed', pressed ? 'true' : 'false');
+    }
+  }
+
+  var toggleButtons = document.querySelectorAll('.durf-theme-toggle button');
+  for (var i = 0; i < toggleButtons.length; i++) {
+    toggleButtons[i].addEventListener('click', function () {
+      var choice = this.getAttribute('data-theme-choice');
+      setStoredChoice(choice);
+      applyTheme(choice);
+    });
+  }
+
+  applyTheme(getStoredChoice());
+})();
+</script>
+</body>
+</html>
