@@ -1,6 +1,8 @@
 # DURF data mesh architecture
 
-**No lake required: data products and data contracts for the Dutch Repository Federation.**
+**Data governance for a federated repository ecosystem**
+
+_Using data products and data contracts for Dutch repositories in a data mesh architecture._
 
 Read it at <https://durf-project.github.io/durf-data-mesh-architecture/>.
 
