@@ -39,6 +39,18 @@ authoritativeDefinitions:
 customProperties:
   - property: durfTheme
     value: 2
+  - property: workPackage
+    value: "Theme 2: Metadata Quality Improvement"
+    description: The DURF work package responsible for getting this contract agreed and adopted.
+  - property: workPackageActivities
+    value:
+      - "Theme 2 · Form and formalize NL Research Information Content Board through EduStandaard, the owner of this contract (M1-3)"
+      - "Theme 2 · Develop updated metadata application profile, translating NL-DIDL-MODS to OpenAIRE CERIF and DC guidelines (M3-12)"
+      - "Theme 2 · Support repositories, CRIS systems and KB e-Depot in adopting the updated profile (M12-18)"
+      - "Theme 2 · Monitor compliance with the new standard and share implementation best practices (M12-48)"
+      - "Theme 2 · Monitor usage of core entity PIDs (ROR, ORCID, DOI) and promote local implementation (M12-48)"
+      - "Theme 3 · Establish baseline metrics and reporting system for full-text uptake, measured on file_locations (M1-6)"
+      - "Theme 5 · Implement DOI-minting capabilities for grey literature, so more records can fill doi (M6-18)"
   - property: diagramArrow
     value: Institutional Repositories -> Metadata harvester & validator (OpenAIRE PROVIDE)
   - property: producerParty

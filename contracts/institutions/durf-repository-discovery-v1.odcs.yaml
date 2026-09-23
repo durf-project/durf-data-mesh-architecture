@@ -35,6 +35,13 @@ authoritativeDefinitions:
 customProperties:
   - property: durfTheme
     value: 5
+  - property: workPackage
+    value: "Theme 5: Distribution & Discovery Optimization"
+    description: The DURF work package responsible for getting this contract agreed and adopted.
+  - property: workPackageActivities
+    value:
+      - "Theme 5 · Develop mappings and best practices for major indexes, which become the content of this contract (M1-12)"
+      - "Theme 5 · Create monitoring system for tracking DURF content visibility across major indexes, the test of this contract (M12-48)"
   - property: diagramArrow
     value: Institutional Repositories -> Other research indexes, catalogues & graphs
   - property: producerParty

@@ -231,6 +231,8 @@ a:hover { color: var(--sds--color--blue--500); }
 .durf-content tbody tr:nth-child(even) { background: var(--sds--color--gray--100); }
 .durf-content td code { font-size: .78rem; }
 .durf-content td.nl { font-weight: 700; color: var(--durf--blue); }
+.durf-content td.m { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.durf-content h3 + p { margin-top: -.25rem; color: var(--sds--color--gray--500); }
 
 .durf-callout {
   margin: 1.5rem 0;
@@ -499,19 +501,19 @@ svg .mk-neu { stroke: var(--sds--color--gray--400); }
 <figcaption>The DURF information chain as four data products and seven contracts. There's no central store: each party keeps its own data in its own systems, and the purple boxes are the only interfaces between them. Handoffs inside a single party, such as PROVIDE → Graph → Broker inside OpenAIRE, are that party's own business (grey arrows).</figcaption>
 </figure>
 
-<p>The seven example contracts are in the <a href="https://github.com/durf-project/durf-data-mesh-architecture/tree/main/contracts"><code>contracts/</code></a> folder of this repository. They're all drafts:</p>
+<p>The seven example contracts are in the <a href="https://github.com/durf-project/durf-data-mesh-architecture/tree/main/contracts"><code>contracts/</code></a> folder of this repository. They're all drafts. Each one is owned by one work package of the DURF project, which gets it agreed and adopted. More on that <a href="#work-packages">below</a>.</p>
 
 <div class="durf-table-wrap">
 <table>
-<thead><tr><th></th><th>Contract</th><th>Producer → consumer</th><th>Theme</th></tr></thead>
+<thead><tr><th></th><th>Contract</th><th>Producer → consumer</th><th>Work package</th></tr></thead>
 <tbody>
-<tr><td>C1</td><td><a href="https://github.com/durf-project/durf-data-mesh-architecture/blob/main/contracts/institutions/durf-cris-publications-v1.odcs.yaml"><code>durf-cris-publications-v1</code></a></td><td>University library → OpenAIRE PROVIDE</td><td>2</td></tr>
-<tr><td>C2</td><td><a href="https://github.com/durf-project/durf-data-mesh-architecture/blob/main/contracts/institutions/durf-repository-discovery-v1.odcs.yaml"><code>durf-repository-discovery-v1</code></a></td><td>University library → search engines and indexes</td><td>5</td></tr>
-<tr><td>C3</td><td><a href="https://github.com/durf-project/durf-data-mesh-architecture/blob/main/contracts/publishing-platforms/durf-publisher-fulltext-v1.odcs.yaml"><code>durf-publisher-fulltext-v1</code></a></td><td>Publishing platform → university library</td><td>3</td></tr>
-<tr><td>C4</td><td><a href="https://github.com/durf-project/durf-data-mesh-architecture/blob/main/contracts/openaire/durf-broker-enrichment-events-v1.odcs.yaml"><code>durf-broker-enrichment-events-v1</code></a></td><td>OpenAIRE Broker → university library</td><td>2</td></tr>
-<tr><td>C5</td><td><a href="https://github.com/durf-project/durf-data-mesh-architecture/blob/main/contracts/openaire/durf-openaire-graph-nl-publications-v1.odcs.yaml"><code>durf-openaire-graph-nl-publications-v1</code></a></td><td>OpenAIRE Graph → Research Portal, other indexes</td><td>5, 6</td></tr>
-<tr><td>C6</td><td><a href="https://github.com/durf-project/durf-data-mesh-architecture/blob/main/contracts/openaire/durf-openaire-graph-edepot-feed-v1.odcs.yaml"><code>durf-openaire-graph-edepot-feed-v1</code></a></td><td>OpenAIRE Graph → KB e-Depot</td><td>4</td></tr>
-<tr><td>C7</td><td><a href="https://github.com/durf-project/durf-data-mesh-architecture/blob/main/contracts/kb/durf-edepot-preservation-status-v1.odcs.yaml"><code>durf-edepot-preservation-status-v1</code></a></td><td>KB e-Depot → university library, URN:NBN resolver</td><td>4</td></tr>
+<tr><td>C1</td><td><a href="https://github.com/durf-project/durf-data-mesh-architecture/blob/main/contracts/institutions/durf-cris-publications-v1.odcs.yaml"><code>durf-cris-publications-v1</code></a></td><td>University library → OpenAIRE PROVIDE</td><td>2 Metadata quality</td></tr>
+<tr><td>C2</td><td><a href="https://github.com/durf-project/durf-data-mesh-architecture/blob/main/contracts/institutions/durf-repository-discovery-v1.odcs.yaml"><code>durf-repository-discovery-v1</code></a></td><td>University library → search engines and indexes</td><td>5 Discovery</td></tr>
+<tr><td>C3</td><td><a href="https://github.com/durf-project/durf-data-mesh-architecture/blob/main/contracts/publishing-platforms/durf-publisher-fulltext-v1.odcs.yaml"><code>durf-publisher-fulltext-v1</code></a></td><td>Publishing platform → university library</td><td>3 Full text</td></tr>
+<tr><td>C4</td><td><a href="https://github.com/durf-project/durf-data-mesh-architecture/blob/main/contracts/openaire/durf-broker-enrichment-events-v1.odcs.yaml"><code>durf-broker-enrichment-events-v1</code></a></td><td>OpenAIRE Broker → university library</td><td>2 Metadata quality</td></tr>
+<tr><td>C5</td><td><a href="https://github.com/durf-project/durf-data-mesh-architecture/blob/main/contracts/openaire/durf-openaire-graph-nl-publications-v1.odcs.yaml"><code>durf-openaire-graph-nl-publications-v1</code></a></td><td>OpenAIRE Graph → Research Portal, other indexes</td><td>6 Portal</td></tr>
+<tr><td>C6</td><td><a href="https://github.com/durf-project/durf-data-mesh-architecture/blob/main/contracts/openaire/durf-openaire-graph-edepot-feed-v1.odcs.yaml"><code>durf-openaire-graph-edepot-feed-v1</code></a></td><td>OpenAIRE Graph → KB e-Depot</td><td>4 e-Depot</td></tr>
+<tr><td>C7</td><td><a href="https://github.com/durf-project/durf-data-mesh-architecture/blob/main/contracts/kb/durf-edepot-preservation-status-v1.odcs.yaml"><code>durf-edepot-preservation-status-v1</code></a></td><td>KB e-Depot → university library, URN:NBN resolver</td><td>4 e-Depot</td></tr>
 </tbody>
 </table>
 </div>
@@ -668,6 +670,107 @@ schema:
 
 <p>We might not even have to build the dashboard from scratch. The <a href="http://ori-dashboard.surf.nl/">ORI Quality Monitoring</a> dashboard from PID2Portal already shows data stewards how complete their institution's metadata is, per source. A DURF tab that reads the contract tests would sit very naturally next to it.</p>
 
+<h2 id="work-packages">What this means for each work package</h2>
+
+<p>The DURF proposal splits the project into six work packages, the themes, each with its own activities and months. So how does all this land in the project plan? The short version:</p>
+
+<ul>
+  <li><strong>Every contract has one work package that owns it</strong> and gets it agreed and adopted.</li>
+  <li><strong>The activities in that work package write the contract, build what it needs, or test it.</strong> None of this is extra work on top of the plan. It gives work the plan already contains a concrete, checkable output.</li>
+  <li><strong>Theme 1 owns no single contract.</strong> It provides the agreements the contracts are attached to.</li>
+</ul>
+
+<p>The months are those in the proposal.</p>
+
+<h3 id="wp1">Theme 1 · Governance of the Federation and the Portal</h3>
+<p><strong>Owns:</strong> the agreements that the contracts belong to.</p>
+<div class="durf-table-wrap">
+<table>
+<thead><tr><th>Activity in the proposal</th><th>Months</th><th>What the data mesh approach adds</th></tr></thead>
+<tbody>
+<tr><td>Develop and secure signatures for the position paper</td><td class="m">1–12</td><td>The pledges say what each party commits to. The contracts say exactly what that means, and each links back to its pledge.</td></tr>
+<tr><td>Formal agreements on roles and responsibilities between SURF, NaMeCo institutions, the KB, publishers and OpenAIRE</td><td class="m">1–18</td><td>Each agreement gets the contracts that party keeps as a technical annex. The agreement is the promise; the annex is the part you can test.</td></tr>
+<tr><td>Legal structure for CC0 metadata influx</td><td class="m">6</td><td>Becomes the licence terms in C3 (metadata from publishers) and C1 (metadata exposed by the repositories).</td></tr>
+<tr><td>Governance framework for all project themes</td><td class="m">1–12</td><td>Includes how a contract changes: versions, pull requests, who approves (see <a href="#changes">below</a>).</td></tr>
+<tr><td>Establish NaMeCo</td><td class="m">1–12</td><td>The natural counterpart for OpenAIRE's contracts C4, C5 and C6: it speaks for the Dutch consumers.</td></tr>
+<tr><td>Review and update the governance framework for sustainability</td><td class="m">36–48</td><td>Hands each contract to a permanent owner. C1 goes to the Content Board, C4–C6 to NaMeCo, and keeping them goes to the institutions' data teams, within the 0.1–0.2 FTE.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 id="wp2">Theme 2 · Metadata Quality Improvement</h3>
+<p><strong>Owns:</strong> C1 (the Dutch application profile) and C4 (enrichment events).</p>
+<div class="durf-table-wrap">
+<table>
+<thead><tr><th>Activity in the proposal</th><th>Months</th><th>What the data mesh approach adds</th></tr></thead>
+<tbody>
+<tr><td>Form the NL Research Information Content Board through EduStandaard</td><td class="m">1–3</td><td>The Content Board becomes the owner of C1.</td></tr>
+<tr><td>Develop the updated metadata application profile</td><td class="m">3–12</td><td>C1 <em>is</em> the draft profile. Deliverable: C1 version 1.0.</td></tr>
+<tr><td>Support repositories, CRIS systems and the e-Depot in adopting the profile</td><td class="m">12–18</td><td>Each institution compares its OAI-PMH output with C1. The gap list is its work plan.</td></tr>
+<tr><td>Monitor compliance and share best practices; monitor core PIDs</td><td class="m">12–48</td><td>These monitors are the tests of C1: the PROVIDE validator plus the Dutch rules.</td></tr>
+<tr><td>Proof of concept for enriching local metadata with the OpenAIRE Broker</td><td class="m">12–24</td><td>C4. The proof of concept shows whether the events are useful enough to commit to.</td></tr>
+<tr><td>Download statistics sharing pilot on OpenAIRE</td><td class="m">12–18</td><td>A new contract, not drafted yet: usage statistics from the repositories to OpenAIRE.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 id="wp3">Theme 3 · Full Text Capture Enhancement</h3>
+<p><strong>Owns:</strong> C3 (publisher deliveries), together with Theme 1 for the agreements with publishers.</p>
+<div class="durf-table-wrap">
+<table>
+<thead><tr><th>Activity in the proposal</th><th>Months</th><th>What the data mesh approach adds</th></tr></thead>
+<tbody>
+<tr><td>Baseline metrics and reporting for full-text uptake</td><td class="m">1–6</td><td>Measure today's completeness of <code>file_locations</code> in C1, per institution. That is the baseline.</td></tr>
+<tr><td>Inventory of tools and methods for full-text capture</td><td class="m">1–12</td><td>Includes delivery by publishers. C3 describes what a repository can receive.</td></tr>
+<tr><td>Develop and pilot a local full-text capture service</td><td class="m">12–24</td><td>The service is the consumer of C3, and delivers the files that C1 exposes.</td></tr>
+<tr><td>Ecosystem-wide improvements to full-text availability</td><td class="m">24–48</td><td>Write C3 into the national agreements with publishers, with Theme 1.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 id="wp4">Theme 4 · KB e-Depot Archiving</h3>
+<p><strong>Owns:</strong> C6 (the e-Depot feed) and C7 (preservation status).</p>
+<div class="durf-table-wrap">
+<table>
+<thead><tr><th>Activity in the proposal</th><th>Months</th><th>What the data mesh approach adds</th></tr></thead>
+<tbody>
+<tr><td>Pull mechanism for metadata and full text, partly via OpenAIRE</td><td class="m">3–12</td><td>C6 is the "via OpenAIRE" part. The "partly" may need an extra contract between the KB and each institution for restricted files.</td></tr>
+<tr><td>Archive and back up all Dutch CRIS and repository content</td><td class="m">12–48</td><td>C6 in production, for every institution that meets C1.</td></tr>
+<tr><td>Monitoring system for preservation status</td><td class="m">12–48</td><td>The monitor reads C7.</td></tr>
+<tr><td>Update and maintain the URN:NBN resolver</td><td class="m">12–18</td><td>The resolver consumes C7, and the URN:NBN flows back into C1.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 id="wp5">Theme 5 · Distribution &amp; Discovery Optimization</h3>
+<p><strong>Owns:</strong> C2 (landing pages and sitemaps).</p>
+<div class="durf-table-wrap">
+<table>
+<thead><tr><th>Activity in the proposal</th><th>Months</th><th>What the data mesh approach adds</th></tr></thead>
+<tbody>
+<tr><td>Mappings and best practices for major indexes</td><td class="m">1–12</td><td>These become the content of C2, and of the index side of C5.</td></tr>
+<tr><td>DOI minting for grey literature</td><td class="m">6–18</td><td>More records can fill <code>doi</code> in C1, the key deduplication field downstream.</td></tr>
+<tr><td>Monitoring system for DURF content visibility in major indexes</td><td class="m">12–48</td><td>The test of C2.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 id="wp6">Theme 6 · Portal Development and Enhancement</h3>
+<p><strong>Owns:</strong> C5 (the Dutch slice of the Graph).</p>
+<div class="durf-table-wrap">
+<table>
+<thead><tr><th>Activity in the proposal</th><th>Months</th><th>What the data mesh approach adds</th></tr></thead>
+<tbody>
+<tr><td>Netherlands Research Portal Steering Committee</td><td class="m">1, 25</td><td>Speaks for the consumers of C5.</td></tr>
+<tr><td>Regular stakeholder needs assessments</td><td class="m">6, 18, 30, 42</td><td>This is "contracts first" in practice. Needs lead to changes in C5, and where necessary in C1.</td></tr>
+<tr><td>Development roadmaps and portal releases</td><td class="m">9–48</td><td>Each roadmap lists the contract changes it depends on. A major portal release can bring a new version of C5.</td></tr>
+<tr><td>SSO to OpenAIRE services with SURFconext</td><td class="m">9</td><td>No contract needed: this is about access, not data.</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Each contract file records the same thing in two properties, <code>workPackage</code> and <code>workPackageActivities</code>, so you can see from the YAML which part of the project it belongs to.</p>
+
 <h2 id="contracts-first">Contracts first, starting from the consumer</h2>
 
 <p>In the BROCCOLI post, my main plea was to start from the user journey and not from the data. The same holds here, just with the chain instead of a dashboard. Don't start by asking "what can our CRIS export?". Start at the far end of the chain and work back:</p>
@@ -689,7 +792,7 @@ schema:
   <li>Adding an optional field is a minor version (<code>0.2.0</code>). Consumers can ignore it.</li>
   <li>Making a field mandatory, or removing one, is a new major version (<code>durf-cris-publications-v2</code>). It runs <em>next to</em> v1 for an agreed transition period, and no consumer is broken overnight.</li>
   <li>Changes to C1 go through the Content Board. Changes to the other contracts are agreed between producer and consumers, with DURF governance as referee.</li>
-  <li>Every contract says in its <code>customProperties</code> which DURF theme it serves and which arrow in the diagram it governs, so the position paper and the contracts can't drift apart.</li>
+  <li>Every contract says in its <code>customProperties</code> which work package owns it, which activities in the proposal it delivers, and which arrow in the diagram it governs. That keeps the position paper, the project plan and the contracts from drifting apart.</li>
 </ul>
 
 <p>The move from NL-DIDL/MODS to the CERIF profile is, in these terms, exactly such a major version change. We'll learn how to run a transition period by doing that one well.</p>
@@ -701,18 +804,32 @@ schema:
   <li><strong>Restricted and embargoed files.</strong> The KB should preserve those too, but the Graph only has what's public. The e-Depot may need direct, authenticated access to each repository for those files. That would be an eighth contract, between the KB and each institution.</li>
   <li><strong>How Broker events arrive.</strong> Broker subscriptions, API pull, or <a href="https://coar-notify.net/">COAR Notify</a> straight into the repository? C4 fixes the content and leaves the channel open. Maybe that's right; maybe it should pick one.</li>
   <li><strong>The exact field lists.</strong> The obligation levels I give for the OpenAIRE guidelines, and the Graph field names in C5 and C6, are my reading. They need checking against the published XSD and the current Graph API before anyone relies on them.</li>
+  <li><strong>Who owns what in the project.</strong> Which work package owns which contract is my reading of the proposal. The theme coordinators may well divide it differently, and they should have the final say.</li>
   <li><strong>Enforcement.</strong> A contract between federation members is backed by the position paper and the NaMeCo agreements. What happens when an institution doesn't keep it for a year? I think the honest answer is "it shows up red on the dashboard, and the other members ask about it". That may well be enough. But it's worth saying out loud.</li>
 </ul>
 
-<h2 id="where-to-start">So, where to start?</h2>
+<h2 id="where-to-start">So, where to start? A timeline</h2>
 
-<ol>
-  <li><strong>Pick two or three pilot institutions</strong> with different CRIS or repository platforms, and have their data teams read C1 against their current OAI-PMH output. The gap list is the first real deliverable.</li>
-  <li><strong>Hand C1 to the Content Board</strong> as the starting draft of the Dutch application profile, once it's formed through EduStandaard.</li>
-  <li><strong>Sit down with OpenAIRE and the KB</strong> about C6 and C7. These two decide whether theme 4 works, and they're the contracts with the fewest parties around the table.</li>
-  <li><strong>Wire the first monitor to C1</strong>: the PROVIDE validator result plus the NL rules, per institution, visible to everyone.</li>
-  <li><strong>Keep the contracts in this repository</strong>, run <code>datacontract lint</code> on every pull request, and link each one from the position paper's pledges.</li>
-</ol>
+<p>Put together, this is how the contracts could move through the project. The months and themes are the proposal's own.</p>
+
+<div class="durf-table-wrap">
+<table>
+<thead><tr><th>Months</th><th>What happens</th><th>Theme</th></tr></thead>
+<tbody>
+<tr><td class="m">1–3</td><td>The Content Board is formed and takes C1 as its starting draft. The Portal Steering Committee is formed to speak for the consumers of C5.</td><td>2, 6</td></tr>
+<tr><td class="m">1–6</td><td>Two or three pilot institutions, on different platforms, compare their OAI-PMH output with C1. The full-text baseline is measured on the same output.</td><td>2, 3</td></tr>
+<tr><td class="m">3–12</td><td>C1 version 1.0 is agreed as the Dutch application profile. The C6 feed runs between OpenAIRE and the KB. The index mappings are written into C2.</td><td>2, 4, 5</td></tr>
+<tr><td class="m">6</td><td>The CC0 legal structure is settled and written into C1 and C3. The first Portal needs assessment feeds into C5.</td><td>1, 6</td></tr>
+<tr><td class="m">12</td><td>The position paper is signed. The governance framework includes how contracts change.</td><td>1</td></tr>
+<tr><td class="m">12–18</td><td>Institutions adopt C1, and the first monitors run as contract tests. URN:NBNs flow back through C7. At month 18 the formal agreements are signed, with the contracts as annexes.</td><td>1, 2, 4</td></tr>
+<tr><td class="m">12–24</td><td>The Broker proof of concept tests C4. The capture service pilot tests C3.</td><td>2, 3</td></tr>
+<tr><td class="m">24–48</td><td>All contracts are in production, with their monitors on one dashboard. C3 goes into the publisher agreements.</td><td>all</td></tr>
+<tr><td class="m">36–48</td><td>Each contract is handed to a permanent owner for after the project.</td><td>1</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Meanwhile, the contracts live in this repository. <code>datacontract lint</code> should run on every pull request, and each contract should be linked from the pledge in the position paper that it makes concrete.</p>
 
 <p>None of this needs a lake, a new platform or a big central team. It needs each party to say out loud what it delivers, write that down in a format the others can read and test, and keep the promise. That's what makes Dutch research output resilient, open and global: not one strong system, but a chain of kept promises.</p>
 

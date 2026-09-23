@@ -36,6 +36,15 @@ customProperties:
     value:
       - 5
       - 6
+  - property: workPackage
+    value: "Theme 6: Portal Development and Enhancement"
+    description: The DURF work package responsible for getting this contract agreed and adopted.
+  - property: workPackageActivities
+    value:
+      - "Theme 6 · Conduct regular stakeholder needs assessments, the requirements for this contract (M6, 18, 30, 42)"
+      - "Theme 6 · Create development roadmaps aligned with OpenAIRE Connect and project themes (M9, 21, 33, 45)"
+      - "Theme 6 · Release quarterly portal updates with major versions annually (M12, 24, 36, 48)"
+      - "Theme 5 · Develop mappings and best practices for major indexes (M1-12)"
   - property: diagramArrow
     value:
       - OpenAIRE Graph -> Netherlands Research Portal (OpenAIRE CONNECT)

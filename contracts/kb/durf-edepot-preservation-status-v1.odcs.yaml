@@ -35,6 +35,13 @@ authoritativeDefinitions:
 customProperties:
   - property: durfTheme
     value: 4
+  - property: workPackage
+    value: "Theme 4: KB National Library e-Depot Archiving"
+    description: The DURF work package responsible for getting this contract agreed and adopted.
+  - property: workPackageActivities
+    value:
+      - "Theme 4 · Establish monitoring system for preservation status of publications and metadata (M12-48)"
+      - "Theme 4 · Update and maintain URN:NBN resolver functionality (M12-18)"
   - property: diagramArrow
     value:
       - Preservation (KB e-Depot) -> Institutional Repositories (status and URN:NBN back)
