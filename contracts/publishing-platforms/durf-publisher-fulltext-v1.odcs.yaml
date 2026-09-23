@@ -35,6 +35,16 @@ authoritativeDefinitions:
 customProperties:
   - property: durfTheme
     value: 3
+  - property: workPackage
+    value: "Theme 3: Full Text Capture Enhancement"
+    description: The DURF work package responsible for getting this contract agreed and adopted.
+  - property: workPackageActivities
+    value:
+      - "Theme 3 · Create inventory of existing tools and methods for full-text capture (M1-12)"
+      - "Theme 3 · Develop and pilot a local full-text capture service, the consumer of this contract (M12-24)"
+      - "Theme 3 · Implement ecosystem-wide improvements to increase full-text availability (M24-48)"
+      - "Theme 1 · Define legal structure for CC0 metadata influx (M6)"
+      - "Theme 1 · Draft and finalize formal agreements on roles and responsibilities, including publishers (M1-18)"
   - property: diagramArrow
     value: Publishing platforms -> Institutional Repositories
   - property: producerParty
