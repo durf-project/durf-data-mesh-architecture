@@ -17,7 +17,7 @@
 })();
 </script>
 <title>DURF Data Governance</title>
-<meta name="description" content="How every party in the Dutch Repository Federation can deliver its data as a product, according to a data contract, so Dutch research output becomes resilient, open and global. No central lake needed.">
+<meta name="description" content="How every party in the Dutch Repository Federation can deliver its data as a product, according to a data contract, so Dutch research output becomes resilient, open and global, with the OpenAIRE Graph as the shared data lake.">
 <link rel="canonical" href="https://durf-project.github.io/durf-data-mesh-architecture/">
 <link rel="icon" type="image/png" href="assets/durf-favicon.png">
 <meta property="og:title" content="Data governance for a federated repository ecosystem">
@@ -277,6 +277,7 @@ svg text { font-family: "Source Sans 3", "Segoe UI", Arial, sans-serif; fill: va
 svg .h { font-size: 14px; font-weight: 700; }
 svg .s { font-size: 12px; }
 svg .muted { fill: var(--sds--color--gray--500); }
+svg .layer { font-size: 9.5px; font-weight: 700; letter-spacing: .1em; fill: var(--sds--color--gray--500); }
 svg .frame { fill: var(--fig-frame-bg); stroke: var(--fig-frame); stroke-width: 1.2; stroke-dasharray: 6 4; }
 svg .frame.outside { fill: var(--fig-out-bg); stroke: var(--sds--color--gray--300); }
 svg .data rect { fill: var(--fig-data-bg); stroke: var(--fig-data-line); }
@@ -390,7 +391,7 @@ svg .mk-neu { stroke: var(--sds--color--gray--400); }
 
 <p>A while ago I wrote <a href="https://surf-ori.github.io/ori-data-mesh-architecture/">a post for the BROCCOLI team</a> arguing that they should borrow a few ideas from <a href="https://www.datamesh-architecture.com/">data mesh architecture</a>. BROCCOLI is building a data lake: it harvests OpenAlex, OpenAIRE, Crossref and the Dutch CRIS systems into one place and refines them through bronze, silver and gold layers into dashboards. Data products, data contracts and a marketplace fit that picture well.</p>
 
-<p>The <a href="https://durf-project.github.io/position-paper/">Dutch Repository Federation</a> (DURF) is a different animal. Nobody is going to copy all of Dutch research output into one central place, and nobody should. The <a href="https://durf-project.github.io/position-paper/#the-durf-information-chain">information chain</a> in the position paper runs through systems that already exist and are run by different parties:</p>
+<p>At first sight, the <a href="https://durf-project.github.io/position-paper/">Dutch Repository Federation</a> (DURF) looks like a different animal. The publications themselves, and the authoritative records about them, stay where they are: at the universities. The <a href="https://durf-project.github.io/position-paper/#the-durf-information-chain">information chain</a> in the position paper runs through systems that already exist and are run by different parties:</p>
 
 <ul>
   <li>seventy-odd repositories and CRIS systems at the universities and medical centres;</li>
@@ -402,7 +403,17 @@ svg .mk-neu { stroke: var(--sds--color--gray--400); }
 
 <p>The DURF proposal puts it plainly: the project <em>"does not build a single technical infrastructure with a single point of failure. Rather it leverages existing components and standards … and creates the necessary links between them."</em></p>
 
-<p>So there's no lake, and no bronze, silver or gold. What's left of data mesh when you take the lake away? Two ideas, and in a federation they matter even more than they did for BROCCOLI: <strong>data as a product</strong>, and <strong>data contracts first</strong>.</p>
+<p>So no lake, then? That's what I thought when I started this post. But follow the <em>metadata</em>, not the files, and a lake shows up after all:</p>
+
+<ul>
+  <li>The OpenAIRE Graph harvests the metadata of all Dutch research output, source by source. That's <strong>bronze</strong>.</li>
+  <li>It then deduplicates it and unites it with everything else it knows, from Crossref, ORCID, ROR, DataCite and thousands of other repositories. That's <strong>silver</strong>.</li>
+  <li>Finally it serves that out for specific uses: the Netherlands Research Portal, the KB e-Depot and, through the e-Depot, the URN:NBN resolver. That's <strong>gold</strong>.</li>
+</ul>
+
+<p>That's a data lake with medallion layers. It just isn't ours: OpenAIRE runs it, and the federation pays for it through its licence contributions. It turns out to be the key to how the whole chain hangs together, so I've given it <a href="#the-lake">its own section</a> below.</p>
+
+<p>Two things carry over from the BROCCOLI post unchanged, and in a federation they matter even more: <strong>data as a product</strong>, and <strong>data contracts first</strong>.</p>
 
 <h2 id="the-idea">The idea in one paragraph</h2>
 
@@ -410,8 +421,8 @@ svg .mk-neu { stroke: var(--sds--color--gray--400); }
 
 <div class="durf-callout">
   <span class="durf-callout__label">What we keep, what we leave out</span>
-  <p><strong>Keep:</strong> data products with an owner and a team; data contracts in the <a href="https://bitol-io.github.io/open-data-contract-standard/latest/">Open Data Contract Standard</a>; federated governance; contracts first, starting from what the consumer needs.</p>
-  <p><strong>Leave out:</strong> a central lake; medallion layers; one shared pipeline stack. Each party keeps its own systems and its own tooling. The contracts are the only thing we share.</p>
+  <p><strong>Keep:</strong> data products with an owner and a team; data contracts in the <a href="https://bitol-io.github.io/open-data-contract-standard/latest/">Open Data Contract Standard</a>; federated governance; contracts first, starting from what the consumer needs; and the medallion layers, with the OpenAIRE Graph as the lake.</p>
+  <p><strong>Leave out:</strong> a lake of our own; one shared pipeline stack. Each party keeps its own systems and its own tooling. What we share are the contracts, and one lake that someone else runs for us.</p>
 </div>
 
 <h2 id="the-picture">What it looks like</h2>
@@ -422,7 +433,7 @@ svg .mk-neu { stroke: var(--sds--color--gray--400); }
 <div class="durf-fig-scroll">
 <svg viewBox="0 0 960 660" role="img" aria-labelledby="f1t f1d">
 <title id="f1t">The DURF information chain as data products and data contracts</title>
-<desc id="f1d">Four data products, each with an owner. Publishing platforms (publisher_deliveries, outside DURF governance) deliver full text and CC0 metadata to institutional repositories under contract C3. Each university library (cris_publications) offers two output ports: C1, CRIS publications in the Dutch application profile, harvested by OpenAIRE PROVIDE, and C2, landing pages and sitemaps for other indexes. OpenAIRE (openaire_graph: PROVIDE, Graph, Broker) offers three output ports: C4, enrichment events back to the institutions; C5, the Dutch slice of the Graph for the Netherlands Research Portal and other indexes; and C6, a preservation feed for the KB e-Depot. The KB (edepot_preservation) offers C7, preservation status and URN:NBN, back to the institutions and to the URN:NBN resolver.</desc>
+<desc id="f1d">Four data products, each with an owner. Publishing platforms (publisher_deliveries, outside DURF governance) deliver full text and CC0 metadata to institutional repositories under contract C3. Each university library (cris_publications) offers two output ports: C1, CRIS publications in the Dutch application profile, harvested by OpenAIRE PROVIDE, and C2, landing pages and sitemaps for other indexes. OpenAIRE (openaire_graph: PROVIDE, Graph, Broker) works as the shared data lake: harvested metadata as bronze, the deduplicated Graph as silver, and three gold output ports: C4, enrichment events back to the institutions; C5, the Dutch slice of the Graph for the Netherlands Research Portal and other indexes; and C6, a preservation feed for the KB e-Depot. The KB (edepot_preservation) offers C7, preservation status and URN:NBN, back to the institutions and to the URN:NBN resolver.</desc>
 <defs>
 <marker id="m-ctr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" class="mk-ctr" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></marker>
 <marker id="m-neu" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" class="mk-neu" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
@@ -451,16 +462,19 @@ svg .mk-neu { stroke: var(--sds--color--gray--400); }
 <rect class="frame" x="496" y="70" width="220" height="392" rx="12"/>
 <text class="h" x="606" y="94" text-anchor="middle">openaire_graph</text>
 <text class="s muted" x="606" y="112" text-anchor="middle">Owner: OpenAIRE</text>
-<text class="s muted" x="606" y="128" text-anchor="middle">One product, three output ports</text>
-<g class="tool"><rect x="510" y="142" width="192" height="40" rx="8"/><text class="h" x="606" y="167" text-anchor="middle">PROVIDE validator</text></g>
-<g class="data"><rect x="510" y="196" width="192" height="48" rx="8"/><text class="h" x="606" y="216" text-anchor="middle">OpenAIRE Graph</text><text class="s" x="606" y="233" text-anchor="middle">deduplicated, enriched</text></g>
-<g class="tool"><rect x="510" y="258" width="192" height="40" rx="8"/><text class="h" x="606" y="283" text-anchor="middle">Broker</text></g>
+<text class="s muted" x="606" y="128" text-anchor="middle">The lake: bronze → silver → gold</text>
+<g class="tool"><rect x="510" y="142" width="192" height="48" rx="8"/><text class="h" x="606" y="162" text-anchor="middle">PROVIDE</text><text class="s" x="606" y="179" text-anchor="middle">harvested and validated</text></g>
+<g class="data"><rect x="510" y="202" width="192" height="48" rx="8"/><text class="h" x="606" y="222" text-anchor="middle">OpenAIRE Graph</text><text class="s" x="606" y="239" text-anchor="middle">deduplicated, united</text></g>
+<g class="tool"><rect x="510" y="260" width="192" height="40" rx="8"/><text class="h" x="606" y="285" text-anchor="middle">Broker</text></g>
 <g class="ctr"><rect x="510" y="312" width="192" height="40" rx="8"/><text class="h" x="606" y="337" text-anchor="middle">C4 · Enrichment events</text></g>
 <g class="ctr"><rect x="510" y="360" width="192" height="40" rx="8"/><text class="h" x="606" y="385" text-anchor="middle">C6 · e-Depot feed</text></g>
 <g class="ctr"><rect x="510" y="408" width="192" height="40" rx="8"/><text class="h" x="606" y="433" text-anchor="middle">C5 · Dutch Graph slice</text></g>
-<line class="a-neu" x1="606" y1="182" x2="606" y2="193" marker-end="url(#m-neu)"/>
-<line class="a-neu" x1="606" y1="244" x2="606" y2="255" marker-end="url(#m-neu)"/>
-<line class="a-neu" x1="606" y1="298" x2="606" y2="309" marker-end="url(#m-neu)"/>
+<line class="a-neu" x1="606" y1="190" x2="606" y2="199" marker-end="url(#m-neu)"/>
+<line class="a-neu" x1="606" y1="250" x2="606" y2="257" marker-end="url(#m-neu)"/>
+<line class="a-neu" x1="606" y1="300" x2="606" y2="309" marker-end="url(#m-neu)"/>
+<text class="layer" transform="translate(713 166) rotate(-90)" text-anchor="middle">BRONZE</text>
+<text class="layer" transform="translate(713 226) rotate(-90)" text-anchor="middle">SILVER</text>
+<text class="layer" transform="translate(713 404) rotate(-90)" text-anchor="middle">GOLD</text>
 
 <!-- KB -->
 <rect class="frame" x="746" y="150" width="200" height="242" rx="12"/>
@@ -498,7 +512,7 @@ svg .mk-neu { stroke: var(--sds--color--gray--400); }
 <text class="s" x="780" y="630">Covered by a contract</text>
 </svg>
 </div>
-<figcaption>The DURF information chain as four data products and seven contracts. There's no central store: each party keeps its own data in its own systems, and the purple boxes are the only interfaces between them. Handoffs inside a single party, such as PROVIDE → Graph → Broker inside OpenAIRE, are that party's own business (grey arrows).</figcaption>
+<figcaption>The DURF information chain as four data products and seven contracts. The OpenAIRE Graph is the one place where the metadata comes together. It works as a lake with bronze, silver and gold layers, run by OpenAIRE. Each party keeps its own data and full texts in its own systems, and the purple boxes are the only interfaces between them. Handoffs inside a single party, such as PROVIDE → Graph → Broker inside OpenAIRE, are that party's own business (grey arrows).</figcaption>
 </figure>
 
 <p>The seven example contracts are in the <a href="https://github.com/durf-project/durf-data-mesh-architecture/tree/main/contracts"><code>contracts/</code></a> folder of this repository. They're all drafts. Each one is owned by one work package of the DURF project, which gets it agreed and adopted. More on that <a href="#work-packages">below</a>.</p>
@@ -517,6 +531,34 @@ svg .mk-neu { stroke: var(--sds--color--gray--400); }
 </tbody>
 </table>
 </div>
+
+<h2 id="the-lake">The OpenAIRE Graph is our data lake</h2>
+
+<p>In the BROCCOLI post, the medallion layers were the backbone of the design. They're here too; they just sit inside one party. Here's the same table for DURF:</p>
+
+<div class="durf-table-wrap">
+<table>
+<thead><tr><th>Layer</th><th>What it holds</th><th>In DURF</th><th>Contract</th></tr></thead>
+<tbody>
+<tr><td>Source</td><td>The authoritative records and the full texts</td><td>Each repository and CRIS, run by the university library</td><td>C1 describes what goes out; C3 what comes in from publishers</td></tr>
+<tr><td>Bronze</td><td>Metadata as harvested and validated, one set per source</td><td>OpenAIRE PROVIDE harvests every Dutch source, next to Crossref, ORCID, ROR, DataCite and the rest</td><td><strong>C1</strong> fixes what the Dutch bronze contains</td></tr>
+<tr><td>Silver</td><td>One deduplicated, cross-linked record per research product</td><td>The OpenAIRE Graph itself: Dutch output united with the rest of the world's</td><td>None from DURF: this is OpenAIRE's internal business</td></tr>
+<tr><td>Gold</td><td>Purpose-built outputs, one per use</td><td>The Dutch slice for the Portal and the indexes; the preservation feed for the e-Depot and, through it, the resolver; enrichment events back to the repositories</td><td><strong>C5</strong>, <strong>C6</strong> and <strong>C4</strong></td></tr>
+</tbody>
+</table>
+</div>
+
+<p>C2 (landing pages for search engines) and C3 (deliveries from publishers) sit outside the lake. They go straight from or to the repositories.</p>
+
+<p>Seeing the Graph as a lake makes three things clear.</p>
+
+<p><strong>DURF doesn't run the lake, so it steers at the edges.</strong> BROCCOLI builds and owns its whole lake, from bronze to gold. DURF only owns what goes in and what comes out. The bronze contract (C1) and the gold contracts (C4, C5, C6) are DURF's grip on the lake. Silver, the matching and deduplication, is OpenAIRE's craft and OpenAIRE's responsibility. DURF's lever there is the licence, negotiated through NaMeCo, not a say in the pipeline.</p>
+
+<p><strong>This time we produce our own bronze.</strong> BROCCOLI has to take OpenAlex as it comes, so its bronze contracts can only describe what arrives. In DURF, the Dutch bronze comes from the federation's own members. That makes C1 a real promise, not a description: when the Portal needs a ROR ID in gold, the fix is at the source that feeds bronze, and that source is one of us.</p>
+
+<p><strong>A lake is not a single point of failure here.</strong> The proposal says DURF shouldn't build a single point of failure, and it doesn't. The Graph holds a copy of the metadata, not the only copy. The authoritative records and the full texts stay at the universities. The bronze can be harvested again at any time. The Graph is published as open dumps on Zenodo. And the e-Depot keeps its own preserved copy. If the lake ever went away, it could be rebuilt from the sources. That's what federating around a lake, rather than into one, means.</p>
+
+<p>There's a nice bonus. BROCCOLI's source-aligned product <code>openaire_publications</code> harvests this same Graph. So the gold that DURF gets from OpenAIRE is bronze for BROCCOLI. Lakes feeding lakes, held together by contracts. C5 could double as BROCCOLI's bronze contract for OpenAIRE, and C1 as its bronze contract for the Dutch CRIS systems.</p>
 
 <h2 id="data-teams">Every university gets a data team</h2>
 
@@ -639,7 +681,7 @@ schema:
   <li><strong>C7, preservation status.</strong> The KB's side of the bargain. For every file it pulled, it reports back whether it's safely preserved, under which URN:NBN, and whether the last fixity check passed. The institution writes the URN:NBN back into its CRIS, and it flows into C1 again as an identifier. The loop closes.</li>
 </ul>
 
-<p>A word on the "Broker to Graph" and "Graph to e-Depot" steps. PROVIDE, the Graph and the Broker are all run by OpenAIRE, so I've drawn them as <em>one</em> data product with three output ports, rather than three products with contracts between them. Contracts matter where responsibility changes hands. Inside OpenAIRE, OpenAIRE may well use contracts between its own teams, and that would be good practice. But DURF doesn't need to see them. What DURF needs is a firm promise at each point where data leaves OpenAIRE: towards the institutions (C4), the Portal and the indexes (C5), and the KB (C6).</p>
+<p>A word on the "Broker to Graph" and "Graph to e-Depot" steps. PROVIDE, the Graph and the Broker are all run by OpenAIRE, so I've drawn them as <em>one</em> data product with three output ports, rather than three products with contracts between them. Contracts matter where responsibility changes hands. Inside OpenAIRE, OpenAIRE may well use contracts between its own teams, and that would be good practice. But DURF doesn't need to see them. What DURF needs is a firm promise at each point where data leaves OpenAIRE: towards the institutions (C4), the Portal and the indexes (C5), and the KB (C6). In lake terms, bronze, silver and gold all live inside this one product, and DURF's contracts sit at its edges: C1 going in, C4, C5 and C6 coming out.</p>
 
 <h2 id="outside">Contracts with parties outside DURF</h2>
 
@@ -776,8 +818,8 @@ schema:
 <p>In the BROCCOLI post, my main plea was to start from the user journey and not from the data. The same holds here, just with the chain instead of a dashboard. Don't start by asking "what can our CRIS export?". Start at the far end of the chain and work back:</p>
 
 <ol>
-  <li><strong>What do the end consumers need?</strong> The e-Depot needs files with checksums. The Portal needs ROR IDs and access rights. The indexes need DOIs and PDF links. That fixes C5, C6 and C2.</li>
-  <li><strong>What must OpenAIRE receive to deliver that?</strong> That fixes C1, and it's why C1 is stricter than the plain OpenAIRE guidelines.</li>
+  <li><strong>What do the end consumers need?</strong> The e-Depot needs files with checksums. The Portal needs ROR IDs and access rights. The indexes need DOIs and PDF links. That fixes the gold contracts C5 and C6, plus C2.</li>
+  <li><strong>What must OpenAIRE receive to deliver that?</strong> That fixes C1, the contract for what goes into bronze. It's why C1 is stricter than the plain OpenAIRE guidelines. In between, ask OpenAIRE whether its silver can connect the two ends.</li>
   <li><strong>What do the institutions need back to keep their promise?</strong> That fixes C4 and C7, and what they need from publishers fixes C3.</li>
   <li><strong>Only then:</strong> the mapping in each CRIS, the OAI-PMH configuration, the harvesting and feeds. Each data team builds its own part with its own tools, and tests it against the contract.</li>
 </ol>
@@ -805,6 +847,7 @@ schema:
   <li><strong>How Broker events arrive.</strong> Broker subscriptions, API pull, or <a href="https://coar-notify.net/">COAR Notify</a> straight into the repository? C4 fixes the content and leaves the channel open. Maybe that's right; maybe it should pick one.</li>
   <li><strong>The exact field lists.</strong> The obligation levels I give for the OpenAIRE guidelines, and the Graph field names in C5 and C6, are my reading. They need checking against the published XSD and the current Graph API before anyone relies on them.</li>
   <li><strong>Who owns what in the project.</strong> Which work package owns which contract is my reading of the proposal. The theme coordinators may well divide it differently, and they should have the final say.</li>
+  <li><strong>Depending on someone else's lake.</strong> If the Graph merges two Dutch records wrongly, or a release is late, the Portal and the e-Depot feel it. C5 and C6 give DURF service levels to point at, but silver stays out of our hands. I think that's the right trade-off for a federation of our size. But the exit route, harvesting our own bronze again from the sources, should stay open and be tested now and then.</li>
   <li><strong>Enforcement.</strong> A contract between federation members is backed by the position paper and the NaMeCo agreements. What happens when an institution doesn't keep it for a year? I think the honest answer is "it shows up red on the dashboard, and the other members ask about it". That may well be enough. But it's worth saying out loud.</li>
 </ul>
 
@@ -831,7 +874,7 @@ schema:
 
 <p>Meanwhile, the contracts live in this repository. <code>datacontract lint</code> should run on every pull request, and each contract should be linked from the pledge in the position paper that it makes concrete.</p>
 
-<p>None of this needs a lake, a new platform or a big central team. It needs each party to say out loud what it delivers, write that down in a format the others can read and test, and keep the promise. That's what makes Dutch research output resilient, open and global: not one strong system, but a chain of kept promises.</p>
+<p>None of this needs a lake of our own, a new platform or a big central team. It needs each party to say out loud what it delivers, write that down in a format the others can read and test, and keep the promise. That's what makes Dutch research output resilient, open and global: not one strong system, but a chain of kept promises.</p>
 
 <p>The contracts are drafts and so is this post. If you run a repository, a CRIS, the Graph or the e-Depot and you think I've got your part wrong, please <a href="https://github.com/durf-project/durf-data-mesh-architecture/issues">open an issue</a> or send a pull request. That's how contracts are supposed to change anyway.</p>
 

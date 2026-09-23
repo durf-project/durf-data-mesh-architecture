@@ -45,6 +45,9 @@ customProperties:
       - "Theme 6 · Create development roadmaps aligned with OpenAIRE Connect and project themes (M9, 21, 33, 45)"
       - "Theme 6 · Release quarterly portal updates with major versions annually (M12, 24, 36, 48)"
       - "Theme 5 · Develop mappings and best practices for major indexes (M1-12)"
+  - property: lakeLayer
+    value: "gold (output port of the OpenAIRE Graph)"
+    description: Where this contract sits relative to the OpenAIRE Graph, which works as the shared data lake.
   - property: diagramArrow
     value:
       - OpenAIRE Graph -> Netherlands Research Portal (OpenAIRE CONNECT)

@@ -51,6 +51,9 @@ customProperties:
       - "Theme 2 · Monitor usage of core entity PIDs (ROR, ORCID, DOI) and promote local implementation (M12-48)"
       - "Theme 3 · Establish baseline metrics and reporting system for full-text uptake, measured on file_locations (M1-6)"
       - "Theme 5 · Implement DOI-minting capabilities for grey literature, so more records can fill doi (M6-18)"
+  - property: lakeLayer
+    value: "bronze (input to the OpenAIRE Graph)"
+    description: Where this contract sits relative to the OpenAIRE Graph, which works as the shared data lake.
   - property: diagramArrow
     value: Institutional Repositories -> Metadata harvester & validator (OpenAIRE PROVIDE)
   - property: producerParty

@@ -6,7 +6,9 @@ The blog post at <https://durf-project.github.io/durf-data-mesh-architecture/> e
 
 Every contract sits on a **boundary between two parties**: one party's data team delivers a data
 product, another party depends on it. Handoffs inside a single party (such as OpenAIRE's PROVIDE, Graph
-and Broker) do not get a contract. The arrows are the ones in the
+and Broker) do not get a contract. The OpenAIRE Graph works as the shared data lake. `durf-cris-publications-v1`
+fixes what goes into its bronze layer. The three OpenAIRE contracts are its gold output ports. Silver, the
+deduplicated Graph itself, is internal to OpenAIRE. The arrows are the ones in the
 [DURF information chain diagram](https://durf-project.github.io/position-paper/#the-durf-information-chain).
 
 The **work package** is the theme of the DURF proposal that is responsible for getting the contract agreed
@@ -56,6 +58,7 @@ Every contract carries the same `customProperties`:
 | `durfTheme` | The DURF theme(s) the contract serves (1–6, as numbered in the position paper) |
 | `workPackage` | The work package (proposal theme) responsible for getting the contract agreed and adopted |
 | `workPackageActivities` | The proposal activities the contract delivers or supports, with project months |
+| `lakeLayer` | For the contracts at the edge of the OpenAIRE Graph, which works as the shared data lake: `bronze` for what goes in (C1), `gold` for what comes out (C4, C5, C6) |
 | `diagramArrow` | The arrow(s) in the information chain diagram the contract governs |
 | `producerParty` | The party that commits to the contract, as opposed to the system it runs |
 | `consumers` / `inputPorts` / `dependsOn` | How the contract links to the others |

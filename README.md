@@ -16,8 +16,8 @@ resilient, open and global. That covers:
 - the KB;
 - publishers.
 
-It borrows two ideas from data mesh architecture: data as a product, and contracts first. It leaves out
-the central data lake and the medallion layers. It is a companion to the
+It borrows two ideas from data mesh architecture: data as a product, and contracts first. DURF builds no
+lake of its own. The OpenAIRE Graph plays that role, with bronze, silver and gold layers. It is a companion to the
 [DURF position paper](https://durf-project.github.io/position-paper/). It is also a companion to the
 earlier post on
 [data mesh for Open Research Information](https://surf-ori.github.io/ori-data-mesh-architecture/).
