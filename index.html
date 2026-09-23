@@ -543,7 +543,7 @@ svg .mk-neu { stroke: var(--sds--color--gray--400); }
 <tr><td>Source</td><td>The authoritative records and the full texts</td><td>Each repository and CRIS, run by the university library</td><td>C1 describes what goes out; C3 what comes in from publishers</td></tr>
 <tr><td>Bronze</td><td>Metadata as harvested and validated, one set per source</td><td>OpenAIRE PROVIDE harvests every Dutch source, next to Crossref, ORCID, ROR, DataCite and the rest</td><td><strong>C1</strong> fixes what the Dutch bronze contains</td></tr>
 <tr><td>Silver</td><td>One deduplicated, cross-linked record per research product</td><td>The OpenAIRE Graph itself: Dutch output united with the rest of the world's</td><td>None from DURF: this is OpenAIRE's internal business</td></tr>
-<tr><td>Gold</td><td>Purpose-built outputs, one per use</td><td>The Dutch slice for the Portal and the indexes; the preservation feed for the e-Depot and, through it, the resolver; enrichment events back to the repositories</td><td><strong>C5</strong>, <strong>C6</strong> and <strong>C4</strong></td></tr>
+<tr><td>Gold</td><td>Purpose-built outputs, one per use</td><td>The Dutch slice for the Portal and the indexes (the Portal's community in the Graph, through the community filter in the Graph API or the community data dump); the preservation feed for the e-Depot and, through it, the resolver; enrichment events back to the repositories</td><td><strong>C5</strong>, <strong>C6</strong> and <strong>C4</strong></td></tr>
 </tbody>
 </table>
 </div>
@@ -558,7 +558,7 @@ svg .mk-neu { stroke: var(--sds--color--gray--400); }
 
 <p><strong>A lake is not a single point of failure here.</strong> The proposal says DURF shouldn't build a single point of failure, and it doesn't. The Graph holds a copy of the metadata, not the only copy. The authoritative records and the full texts stay at the universities. The bronze can be harvested again at any time. The Graph is published as open dumps on Zenodo. And the e-Depot keeps its own preserved copy. If the lake ever went away, it could be rebuilt from the sources. That's what federating around a lake, rather than into one, means.</p>
 
-<p>There's a nice bonus. BROCCOLI's source-aligned product <code>openaire_publications</code> harvests this same Graph. So the gold that DURF gets from OpenAIRE is bronze for BROCCOLI. Lakes feeding lakes, held together by contracts. C5 could double as BROCCOLI's bronze contract for OpenAIRE, and C1 as its bronze contract for the Dutch CRIS systems.</p>
+<p>There's a nice bonus. SURF's <a href="https://surf-ori.github.io/ori-data-mesh-architecture/">BROCCOLI lake</a> reads the same data for two of its bronze sources. Its <code>openaire_publications</code> is the Dutch slice of the Graph, from the community data dump or the community filter in the Graph API: exactly C5. Its <code>cris_&lt;institution&gt;</code> harvests the same CRIS endpoints that C1 covers. So the gold that DURF gets from OpenAIRE is bronze for BROCCOLI: lakes feeding lakes, held together by contracts. BROCCOLI doesn't need its own bronze contracts for these two sources. It can reuse C1 and C5, and when a university improves its metadata to meet C1, the Portal and BROCCOLI's quality dashboard both see it.</p>
 
 <h2 id="data-teams">Every university gets a data team</h2>
 
