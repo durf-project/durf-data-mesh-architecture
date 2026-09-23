@@ -40,6 +40,9 @@ customProperties:
   - property: workPackageActivities
     value:
       - "Theme 2 · Develop proof of concept for enriching local metadata with OpenAIRE data broker (M12-24)"
+  - property: lakeLayer
+    value: "gold (output port of the OpenAIRE Graph)"
+    description: Where this contract sits relative to the OpenAIRE Graph, which works as the shared data lake.
   - property: diagramArrow
     value: Enriched Metadata (OpenAIRE Broker) -> Institutional Repositories
   - property: producerParty

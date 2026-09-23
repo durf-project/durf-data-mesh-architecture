@@ -33,6 +33,9 @@ customProperties:
     value:
       - "Theme 4 · Implement pull mechanism for metadata and full-text publications partly via OpenAIRE (M3-12)"
       - "Theme 4 · Archive and back up all Dutch CRIS and repository content at KB e-Depot (M12-48)"
+  - property: lakeLayer
+    value: "gold (output port of the OpenAIRE Graph)"
+    description: Where this contract sits relative to the OpenAIRE Graph, which works as the shared data lake.
   - property: diagramArrow
     value: OpenAIRE Graph -> Preservation (KB e-Depot)
   - property: producerParty
