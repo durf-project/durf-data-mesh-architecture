@@ -12,17 +12,19 @@ tags:
   - theme-6
 description:
   purpose: >-
-    The Dutch slice of the OpenAIRE Graph: every research product harvested from a Dutch repository or CRIS, or
-    affiliated to a Dutch organisation by ROR, deduplicated and enriched with what the Graph found in other
-    sources. It is the dataset behind the Netherlands Research Portal (theme 6) and the Dutch contribution the
+    The Dutch slice of the OpenAIRE Graph: the community of the Netherlands Research Portal in the Graph. That
+    covers every research product harvested from a Dutch repository or CRIS, or affiliated to a Dutch
+    organisation by ROR, deduplicated and enriched with what the Graph found in other sources. It is available
+    in two ways: the community filter in the Graph API, and the community data dump. It is the dataset behind the Netherlands Research Portal (theme 6) and the Dutch contribution the
     Graph redistributes to other indexes and EOSC nodes (theme 5).
   usage: >-
     Producer: OpenAIRE. Consumers: the Netherlands Research Portal (OpenAIRE CONNECT), research-information
     initiatives such as BROCCOLI, and indexes and EOSC nodes that take OpenAIRE data. The KB e-Depot has its
     own, narrower output port: durf-openaire-graph-edepot-feed-v1.
   limitations: >-
-    Draft. Field names follow the OpenAIRE Graph data model for research products; check them against the
-    current Graph API release. Membership of the Dutch slice (which organisations, which datasources) is
+    Draft. Field names follow the OpenAIRE Graph data model for research products; check them, and the exact
+    name of the community filter parameter, against the current Graph API documentation. The community ID is a
+    placeholder. Membership of the Dutch slice (which organisations, which datasources) is
     decided by DURF governance (theme 1) and recorded in the NaMeCo agreements.
 authoritativeDefinitions:
   - type: implementation-guide
@@ -72,12 +74,17 @@ slaProperties:
 servers:
   - server: production
     type: api
-    location: https://api.openaire.eu/graph/v1/researchProducts
-    description: Graph API, filtered on Dutch organisations and datasources.
+    location: https://api.openaire.eu/graph/v1/researchProducts?relCommunityId=<nl-research-portal-community-id>
+    description: >-
+      Graph API with the community filter set to the Netherlands Research Portal community. Placeholder
+      community ID; check the parameter name in the Graph API documentation.
   - server: bulk
     type: api
     location: https://zenodo.org/communities/openaire-research-graph
-    description: Periodic full dumps of the Graph, published on Zenodo.
+    description: >-
+      Community data dump: the periodic dump of the Graph per research community, published on Zenodo. The
+      Netherlands Research Portal community's file is the bulk version of this slice. SURF's BROCCOLI lake reads it
+      as its bronze source openaire_publications.
 schema:
   - name: research_product
     physicalType: json-object

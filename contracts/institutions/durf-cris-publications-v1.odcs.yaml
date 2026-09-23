@@ -61,6 +61,7 @@ customProperties:
   - property: consumers
     value:
       - durf-openaire-graph-nl-publications-v1 (via OpenAIRE PROVIDE)
+      - SURF BROCCOLI lake, bronze product cris_<institution> (harvests the same endpoint)
   - property: oaiPmhSet
     value: openaire_cris_publications
   - property: oaiPmhMetadataPrefix
