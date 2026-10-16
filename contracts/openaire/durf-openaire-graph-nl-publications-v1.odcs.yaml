@@ -15,8 +15,8 @@ description:
     The Dutch slice of the OpenAIRE Graph: the community of the Netherlands Research Portal in the Graph. That
     covers every research product harvested from a Dutch repository or CRIS, or affiliated to a Dutch
     organisation by ROR, deduplicated and enriched with what the Graph found in other sources. It is available
-    in two ways: the community filter in the Graph API, and the community data dump. It is the dataset behind the Netherlands Research Portal (theme 6) and the Dutch contribution the
-    Graph redistributes to other indexes and EOSC nodes (theme 5).
+    in two ways: the community filter in the Graph API, and the community data dump. It is the dataset behind the Netherlands Research Portal (theme 6), and the open
+    Dutch slice that other indexes and EOSC nodes can take from the Graph API and dumps (theme 5).
   usage: >-
     Producer: OpenAIRE. Consumers: the Netherlands Research Portal (OpenAIRE CONNECT), research-information
     initiatives such as BROCCOLI, and indexes and EOSC nodes that take OpenAIRE data. The KB e-Depot has its
