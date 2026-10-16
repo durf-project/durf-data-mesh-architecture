@@ -22,9 +22,8 @@ description:
     initiatives such as BROCCOLI, and indexes and EOSC nodes that take OpenAIRE data. The KB e-Depot has its
     own, narrower output port: durf-openaire-graph-edepot-feed-v1.
   limitations: >-
-    Draft. Field names follow the OpenAIRE Graph data model for research products; check them, and the exact
-    name of the community filter parameter, against the current Graph API documentation. The community ID is a
-    placeholder. Membership of the Dutch slice (which organisations, which datasources) is
+    Draft. Field names follow the OpenAIRE Graph data model for research products; check them against the
+    current Graph API (v2) documentation. Membership of the Dutch slice (which organisations, which datasources) is
     decided by DURF governance (theme 1) and recorded in the NaMeCo agreements.
 authoritativeDefinitions:
   - type: implementation-guide
@@ -33,6 +32,11 @@ authoritativeDefinitions:
   - type: implementation-guide
     url: https://graph.openaire.eu/docs/apis/graph-api/
     description: OpenAIRE Graph API.
+  - type: implementation-guide
+    url: https://netherlands.openaire.eu/develop
+    description: >-
+      Netherlands Research Portal, developer page. Lists the API requests for the netherlands community, e.g.
+      researchProducts?relCommunityId=netherlands&type=publication.
 customProperties:
   - property: durfTheme
     value:
@@ -74,10 +78,11 @@ slaProperties:
 servers:
   - server: production
     type: api
-    location: https://api.openaire.eu/graph/v1/researchProducts?relCommunityId=<nl-research-portal-community-id>
+    location: https://api.openaire.eu/graph/v2/researchProducts?relCommunityId=netherlands
     description: >-
-      Graph API with the community filter set to the Netherlands Research Portal community. Placeholder
-      community ID; check the parameter name in the Graph API documentation.
+      Graph API (v2) filtered on the netherlands community, the community of the Netherlands Research Portal.
+      Narrow with type=publication, dataset, software or other, and with bestOpenAccessRightLabel=OPEN for open
+      access only.
   - server: bulk
     type: api
     location: https://zenodo.org/communities/openaire-research-graph
