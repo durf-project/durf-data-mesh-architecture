@@ -35,7 +35,7 @@ authoritativeDefinitions:
     description: OpenAIRE Guidelines for CRIS Managers 1.2 (CERIF-XML profile, OAI-PMH, vocabularies).
   - type: businessDefinition
     url: https://durf-project.github.io/position-paper/
-    description: DURF position paper, theme 2 (enriched metadata) and the responsibilities and expectations matrix (Appendix A).
+    description: DURF position paper, theme 2 (enriched metadata) and the roles and responsibilities matrix (Appendix A).
 customProperties:
   - property: durfTheme
     value: 2
