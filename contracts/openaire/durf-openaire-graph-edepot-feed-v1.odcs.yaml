@@ -59,9 +59,9 @@ slaProperties:
 servers:
   - server: production
     type: api
-    location: https://api.openaire.eu/graph/v1/researchProducts?relCommunityId=<nl-research-portal-community-id>
+    location: https://api.openaire.eu/graph/v2/researchProducts?relCommunityId=netherlands
     description: >-
-      Placeholder. The same Dutch slice as durf-openaire-graph-nl-publications-v1 (the Netherlands Research
+      The same Dutch slice as durf-openaire-graph-nl-publications-v1 (the Netherlands Research
       Portal community), fetched incrementally. The exact endpoint is to be agreed between OpenAIRE and the KB.
 schema:
   - name: preservation_item
