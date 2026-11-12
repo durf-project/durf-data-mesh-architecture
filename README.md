@@ -28,7 +28,7 @@ earlier post on
 | --- | --- |
 | [`index.html`](index.html) | The blog post, a single static page served by GitHub Pages |
 | [`contracts/`](contracts/) | Seven draft data contracts in [ODCS v3.1.0](https://bitol-io.github.io/open-data-contract-standard/latest/), one per boundary between parties. See [`contracts/README.md`](contracts/README.md) |
-| [`assets/`](assets/) | DURF logo and favicon |
+| [`assets/`](assets/) | Older copies of the DURF logo and favicon, kept so existing links keep working. The page itself uses the logo, favicon and social image from the [DURF design system](https://durf-project.github.io/durf-design-system/) |
 
 The central contract is
 [`durf-cris-publications-v1`](contracts/institutions/durf-cris-publications-v1.odcs.yaml). It is a proposal
