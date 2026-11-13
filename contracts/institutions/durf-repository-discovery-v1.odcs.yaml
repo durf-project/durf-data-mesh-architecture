@@ -14,7 +14,7 @@ description:
   purpose: >-
     The second output port of the same institutional data product: every publication has a crawlable landing
     page with machine-readable metadata, listed in a sitemap, so that Google Scholar, OpenAlex, CORE, BASE and
-    other indexes pick up Dutch research output directly from the source (DURF theme 5).
+    other indexes pick up Dutch scholarly output directly from the source (DURF theme 5).
   usage: >-
     Producer: the institution's data team. Consumers: web crawlers of search engines and indexes. Unlike the
     other DURF contracts, the consumers here are outside DURF's governance and never sign anything; the

@@ -8,7 +8,7 @@ Read it at <https://durf-project.github.io/durf-data-mesh-architecture/>.
 
 This is a blog post (and a small set of example contracts) about how every party in the
 [DURF information chain](https://durf-project.github.io/position-paper/#the-durf-information-chain) can
-deliver its data as a product, according to a data contract, so that Dutch research output becomes
+deliver its data as a product, according to a data contract, so that Dutch scholarly output becomes
 resilient, open and global. That covers:
 
 - the university libraries;
