@@ -1,7 +1,7 @@
 apiVersion: v3.1.0
 kind: DataContract
 id: durf-openaire-graph-nl-publications-v1
-name: OpenAIRE Graph, Dutch research output
+name: OpenAIRE Graph, Dutch scholarly output
 version: 0.1.0
 status: draft
 domain: openaire

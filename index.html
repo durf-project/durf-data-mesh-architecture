@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <title>DURF Data Governance</title>
-<meta name="description" content="How every party in the Dutch Repository Federation can deliver its data as a product, according to a data contract, so Dutch research output becomes resilient, open and global, with the OpenAIRE Graph as the shared data lake.">
+<meta name="description" content="How every party in the Dutch Repository Federation can deliver its data as a product, according to a data contract, so Dutch scholarly output becomes resilient, open and global, with the OpenAIRE Graph as the shared data lake.">
 <link rel="canonical" href="https://durf-project.github.io/durf-data-mesh-architecture/">
 <link rel="icon" type="image/svg+xml" href="https://durf-project.github.io/durf-design-system/assets/favicon.svg">
 <link rel="apple-touch-icon" href="https://durf-project.github.io/durf-design-system/assets/apple-touch-icon.png">
@@ -172,7 +172,7 @@ svg .mk-neu { stroke: var(--faint-foreground); }
         <p class="durf-subtitle">Using data products and data contracts for Dutch repositories in a data mesh architecture</p>
       </div>
     </div>
-    <p class="durf-lede">In the Dutch Repository Federation, every party delivers its data as a product, according to a contract. That's how Dutch research output becomes resilient, open and global.</p>
+    <p class="durf-lede">In the Dutch Repository Federation, every party delivers its data as a product, according to a contract. That's how Dutch scholarly output becomes resilient, open and global.</p>
     <p class="byline">Maurice Vanderfeesten · September 2026</p>
     <nav class="links" aria-label="Page">
       <a href="https://github.com/durf-project/durf-data-mesh-architecture/tree/main/contracts">Example contracts</a>
@@ -202,7 +202,7 @@ svg .mk-neu { stroke: var(--faint-foreground); }
 <p>So no lake, then? That's what I thought when I started this post. But follow the <em>metadata</em>, not the files, and a lake shows up after all:</p>
 
 <ul>
-  <li>The OpenAIRE Graph harvests the metadata of all Dutch research output, source by source. That's <strong>bronze</strong>.</li>
+  <li>The OpenAIRE Graph harvests the metadata of all Dutch scholarly output, source by source. That's <strong>bronze</strong>.</li>
   <li>It then deduplicates it and unites it with everything else it knows, from Crossref, ORCID, ROR, DataCite and thousands of other repositories. That's <strong>silver</strong>.</li>
   <li>Finally it serves that out for specific uses: the Netherlands Research Portal, the KB e-Depot and, through the e-Depot, the URN:NBN resolver. That's <strong>gold</strong>.</li>
 </ul>
@@ -670,7 +670,7 @@ schema:
 
 <p>Meanwhile, the contracts live in this repository. <code>datacontract lint</code> should run on every pull request, and each contract should be linked from the pledge in the position paper that it makes concrete.</p>
 
-<p>None of this needs a lake of our own, a new platform or a big central team. It needs each party to say out loud what it delivers, write that down in a format the others can read and test, and keep the promise. That's what makes Dutch research output resilient, open and global: not one strong system, but a chain of kept promises.</p>
+<p>None of this needs a lake of our own, a new platform or a big central team. It needs each party to say out loud what it delivers, write that down in a format the others can read and test, and keep the promise. That's what makes Dutch scholarly output resilient, open and global: not one strong system, but a chain of kept promises.</p>
 
 <p>The contracts are drafts and so is this post. If you run a repository, a CRIS, the Graph or the e-Depot and you think I've got your part wrong, please <a href="https://github.com/durf-project/durf-data-mesh-architecture/issues">open an issue</a> or send a pull request. That's how contracts are supposed to change anyway.</p>
 
